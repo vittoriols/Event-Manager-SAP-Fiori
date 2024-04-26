@@ -1,0 +1,4 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<ViewSettingsDialog confirm="confirmSortingTable" class="sapUiSizeCompact">
+	</ViewSettingsDialog>
+</core:FragmentDefinition>

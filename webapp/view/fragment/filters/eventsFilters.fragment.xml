@@ -1,0 +1,229 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:l="sap.ui.layout"
+>
+<!-- <l:VerticalLayout -->
+			<!-- width="100%"> -->
+<!-- <FlexBox alignItems="Start" width="100%"> -->
+<VBox class="panelBackground paddingStartFiltri" >
+	<l:Grid id="id0Grid" width="100%" >
+		<l:VerticalLayout visible="{= ${visibilityModel>/detailRitardoConsegne} === true}" width="100%" >
+			<l:layoutData> <l:GridData span="L2 S12"/>
+			</l:layoutData> <Label text = "Ricerca ordini" class="fontLabelHeader"/> 
+		</l:VerticalLayout>
+		
+		<l:VerticalLayout
+			id="id12VerticalLayout"
+			class=""
+			width="100%">
+			<l:layoutData>
+				<l:GridData
+					id="id14GridData"
+					span="L2 S12"
+					linebreak="true"/>
+			</l:layoutData>
+			<Label
+				class="blackText"
+				id="idNOrdineLabel"
+				text="Titolo Evento"
+			/>
+
+
+			<MultiInput 
+			showValueHelp="false" 
+			id="idNumOrdGOMultiInput" 
+			placeholder="Inserisci titolo evento"
+			showSuggestion="true" 
+			suggestionItems="{path: 'ordiniModel>/'}"
+			suggest="onTitleInput"
+			maxTokens="1" 
+			startSuggestion="4" 
+			change=".filtersUtils.setTokenWithoutSuggestion">
+				<suggestionItems>
+					<core:Item key="{ordiniModel>Ebeln}"
+						text="{ path: 'ordiniModel>Ebeln', formatter: '.formatter.trimLeadZeros'}"/>
+				</suggestionItems>
+			</MultiInput>
+    </l:VerticalLayout>
+
+    <l:VerticalLayout
+			id="id13VerticalLayout"
+			width="100%"
+		>
+			<l:layoutData>
+				<l:GridData
+					id="id15GridData"
+					span="L2 S12"
+				/>
+			</l:layoutData>
+			<Label
+				class="blackText"
+				id="idDatiDiConsegnaRichiesteDaLabel"
+				text="Quando"
+			/>
+			<DatePicker
+				id="idDataDaGODatePicker"
+				width="100%"
+				placeholder="gg/mm/aaaa"
+				displayFormat="dd/MM/yyyy"
+				valueFormat="ddMMyyyy"
+			/>
+		</l:VerticalLayout>
+
+    
+
+        <l:VerticalLayout
+			id="id15VerticalLayout"
+			width="100%">
+			<l:layoutData>
+				<l:GridData
+					id="id17GridData"
+					span="L2 S12"
+				/>
+			</l:layoutData>
+
+			<Label
+				class="blackText"
+				id="idDatiIndirizzoEvento"
+				text="Location"
+			/>
+
+			<Input 	id="idIndirizzoGOInput" 
+					placeholder="Inserisci indirizzo dell'evento"
+					showSuggestion="true" 
+					suggestionItems="{magazziniModel>/}"
+					suggest="onAddressInput">
+				<suggestionItems>
+					<core:Item id="id1Item" key="{magazziniModel>key}"
+						text="{magazziniModel>key} - {magazziniModel>value}"/>
+				</suggestionItems>
+			</Input>
+		</l:VerticalLayout>
+        <l:VerticalLayout id="id31VerticalLayout"
+			width="100%">
+			<l:layoutData>
+				<l:GridData
+					id="id98GridData"
+					span="L2 S12"
+				/>
+			</l:layoutData>
+
+			<Label
+				class="blackText"
+				id="idTipoEvento"
+				text="Tipo Evento"
+			/>
+        <ComboBox
+				id="idSocGOComboBox"
+				placeholder="Evento"
+				width="100%"
+				items="{listaTipiEventi>/}"
+			>
+				<core:Item
+					id="id2Item"
+					key="{listaTipiEventi>Tipo}"
+					text="{listaTipiEventi>Descrizione} - {listaTipiEventi>Organizzatore}"
+				/>
+			</ComboBox> 
+		</l:VerticalLayout>
+		 <l:VerticalLayout id="id33VerticalLayout"
+			width="100%">
+			<l:layoutData>
+				<l:GridData
+					id="id99GridData"
+					span="L2 S12"
+				/>
+			</l:layoutData>
+
+			<Label
+				class="blackText"
+				id="idCategoriaEvento"
+				text="Categoria Evento"
+			/>
+        <!-- <ComboBox
+				id="idCategoriaEventoCB"
+				placeholder="Categoria Evento"
+				width="100%"
+				items="{listaCategorieEventi>/}"
+			>
+				<core:Item
+					id="id23Item"
+					key="{listaCategorieEventi>Cod}"
+					text="{listaCategorieEventi>Categoria}"
+				/>
+			</ComboBox>  -->
+			<MultiComboBox
+			id="idCategoriaEventoCB"
+			placeholder="Categoria Evento"
+			selectionChange="handleSelectionChange"
+			selectionFinish="handleSelectionFinish"
+			width="350px"
+			items="{listaCategorieEventi>/}">
+			<core:Item key="{listaCategorieEventi>Cod}" text="{listaCategorieEventi>Categoria}"/>
+		</MultiComboBox>
+		</l:VerticalLayout>
+
+		<l:VerticalLayout id="id78VerticalLayout"
+			width="100%">
+			<l:layoutData>
+				<l:GridData
+					id="id78GridData"
+					span="L2 S12"
+				/>
+			</l:layoutData>
+
+			<Label
+				class="blackText"
+				id="idStatoEvento"
+				text="Stato Evento"
+			/>
+        <ComboBox
+				id="idStatoEventoGOComboBox"
+				placeholder="Stato Evento"
+				width="100%"
+				items="{listaStati>/}"
+				
+			>
+				<core:Item
+					id="id44Item"
+					key="{listaStati>Cod}"
+					text="{listaStati>Descrizione}"
+				/>
+			</ComboBox> 
+		</l:VerticalLayout>
+
+        <l:VerticalLayout
+			width="100%"
+		>
+			<l:layoutData>
+				<l:GridData
+					span="L1 S12"
+					linebreak="true"
+				/>
+			</l:layoutData>
+			<HBox justifyContent="Start">
+			<Button  id="idClearFiltriGOButton" text="Clear Filtri"
+			press="onAzzeraFiltri"/>
+			<Button class="sapUiSmallMarginBegin " id="idRicercaButton" text="Ricerca" type="Emphasized"
+			press="onSearchEvents"/>
+			</HBox>
+		</l:VerticalLayout>
+
+		<!-- <l:VerticalLayout
+			class="customPaddingTopButtonL"
+			width="100%"
+		>
+			<l:layoutData>
+				<l:GridData
+					span="L1 S12"
+				/>
+			</l:layoutData>
+			<Button class="sapUiSmallMarginBegin sapUiSmallMarginTop" id="idRicercaButton" text="Ricerca" type="Emphasized"
+			press=".goFilters.onSearchRigheOrdiniGOButtonPress"/>
+		</l:VerticalLayout> -->
+	</l:Grid>
+		<!-- </FlexBox> -->
+<!-- </l:VerticalLayout> -->
+</VBox>
+</core:FragmentDefinition>

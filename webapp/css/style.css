@@ -1,0 +1,391 @@
+@media (min-width:768px){
+    .customPaddingTopL {
+        padding-top: 24px;
+    }
+    .customPaddingTopButtonL {
+        padding-top: 15px;
+    }
+}
+
+.largePaddingTop{
+    padding-top: 7.5rem;
+}
+
+.noPadding{
+    padding-top: 0;
+}
+
+.adjustedPageHeight{
+    height: calc(100% - 2.5rem) !important;
+}
+
+.blackText{
+    color: black !important;
+}
+
+[data-tobold="true"] {
+    font-weight: bold;
+}
+
+.backgroundcolorIconTabHeader{
+    background-color: white !important;
+}
+
+.backgroundColorHeader{
+    background-color: #fbf4d5 !important;
+}
+
+.backgroundColorContent{
+    background-color: #E5EEF9 !important;
+}
+
+.sapUiTableColHdrCnt {
+    background-color: #75D1FC !important;
+}
+
+.sapUiTableHeaderRow {
+    background-color: #75D1FC !important;
+}
+
+.backgroundYellow {
+    background-color: yellow !important;
+}
+
+.backgroundDarkGrey {
+    background-color: darkgrey !important;
+}
+
+.backgroundGreen {
+    background-color: green !important;
+}
+
+.backgroundOrange {
+    background-color: orange !important;
+}
+
+.fontLabelTabella {
+    font-size: 16px;
+    color: #003478;
+    letter-spacing: 0;
+    line-height: 20px;
+    font-weight: 500;
+    text-transform: uppercase;
+    text-align: left;
+}
+
+.fontLabelHeader {
+    font-size: 20px;
+    color: #003478;
+    letter-spacing: 0;
+    line-height: 20px;
+    font-weight: bold !important;
+    text-align: left;
+}
+
+.sapUiSizeCompact .sapMListTblHighlightCol+.sapMListTblCell.sapMListTblHeaderCell {
+    background-color: #75D1FC !important;
+}
+
+.sapUiSizeCompact .sapMListTblCell.sapMListTblHeaderCell {
+    background-color: #75D1FC !important;
+}
+
+.sapUiSizeCompact .sapMColumnHeader {
+    background-color: #75D1FC !important;
+}
+
+
+.NavButton span {
+    text-decoration: underline !important;
+    text-underline-offset: 4px;
+    letter-spacing: 0;
+    line-height: 20px;
+}
+
+.TextColorFilter {
+    color: #1D2D3E !important;
+}
+
+.bottomBoxTable {
+    border-right: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
+    border-left: 1px solid #e5e5e5;
+    background-color: white !important;
+    border-bottom-right-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+}
+
+.marginTopIconTable {
+    margin-top: 0.3rem;
+}
+
+.marginLeftWBSRilasciate {
+    margin-left: -1.0rem;
+}
+
+.marginTopNavicon {
+    margin-top: 0.55rem;
+    margin-left: 0.55rem;
+    margin-right: 0.55rem;
+    font-size: 0.9rem;
+}
+
+.spaceLabelNavMain {
+    margin-top: 0.698rem !important;
+    
+}
+
+.spaceLabelNav {
+    margin-top: 0.398rem !important
+}
+
+.sapMLabel {
+    color: #003478;
+    letter-spacing: 0;
+    line-height: 20px;
+    font-weight: 500;
+    text-align: left;
+}
+
+.backgroundColorNaviBox {
+    background-color: #E5EEF9;
+}
+
+.sapUiCompFilterBarNonPhone.sapUiRespGrid.sapUiRespGridHSpace0 {
+    padding-top: 0.1rem !important;
+}
+
+.backgroundColorLineGrey {
+    border-right: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
+    border-left: 1px solid #e5e5e5;
+    background-color: grey !important;
+}
+
+.blackFontAltreInfoLabel {
+    color: black !important;
+}
+
+.pointer:hover {
+    cursor: pointer;
+}
+
+.paddingOBJHeadCreaIniz {
+    padding-left: 6%;
+}
+
+.inputTextAlignEnd input {
+    text-align: end !important;
+}
+
+.sapUxAPObjectPageHeaderContent {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.0rem !important;
+}
+
+.marginTopFornitoreCreaPro {
+    margin-top: 0.35rem !important;
+}
+
+.rotateIcon {
+    transform: rotate(90deg);
+}
+
+.marginTopBoxButtonCreaPro {
+    margin-top: 0.8rem !important;
+}
+
+.sapMListTbl .sapMLabel {
+    color: #003478;
+}
+
+[data-mydata="T0"] {
+    background-color: rgb(0, 52, 120) !important;
+    border-radius: 25px;
+    color: white !important;
+}
+
+[data-mydata="T1"] {
+    background-color: #008AC2 !important;
+    border-radius: 25px;
+    color: white !important;
+}
+
+[data-mydata="T2"] {
+    background-color: #D67733 !important;
+    border-radius: 25px;
+    color: white !important;
+}
+
+[data-mydata="T3"] {
+    background-color: #5C00C2 !important;
+    border-radius: 25px;
+    color: white !important;
+}
+
+[data-mydata="T4"] {
+    background-color: #004E30 !important;
+    border-radius: 25px;
+    color: white !important;
+}
+
+[data-mydata="T5"] {
+    background-color: #A34400 !important;
+    border-radius: 25px;
+    color: white !important;
+}
+
+[data-mydata="T6"] {
+    background-color: #009B60 !important;
+    border-radius: 25px;
+    color: white !important;
+}
+
+[data-mydata="T7"] {
+    background-color: red !important;
+    border-radius: 25px;
+    color: white !important;
+}
+
+.paddingLabelTable :first-child {
+    padding-left: 0.4rem !important;
+    padding-right: 0.4rem !important;
+}
+
+.fontBlackColorLabel {
+    color: black !important;
+}
+
+.fontRedColorLabel {
+    color: red !important;
+}
+
+.sizeIconHome {
+    font-size: 1.2rem;
+}
+
+.listAlternativeColorODD li:nth-child(even) {
+    background-color: #F3F6FB;
+}
+
+.sizeFontTitolo {
+    font-size: 1.5rem;
+}
+
+.sizeFontInfoComuni {
+    font-size: 1.1rem;
+}
+
+.paddingTop {
+    padding-top: 0.3rem !important;
+}
+
+.resizeDetailPanel {
+    padding: 0rem 3rem 1rem 1.2rem !important;
+}
+
+.fontLarge {
+    font-size: 1.4rem !important;
+    color: #003478 !important;
+    letter-spacing: 0 !important;
+    line-height: 1.25rem !important;
+    font-weight: 500 !important;
+    text-align: left !important;
+}
+
+.fontMedium {
+    font-size: 1.1rem !important;
+    color: #000000 !important;
+    letter-spacing: 0 !important;
+    line-height: 1.8rem !important;
+    font-weight: 500 !important;
+    text-align: left !important;
+}
+
+.fontSmall {
+    font-size: 1.1rem !important;
+    color: #000000 !important;
+    letter-spacing: 0 !important;
+    line-height: 1.2rem !important;
+    font-weight: 500 !important;
+    text-align: left !important;
+}
+
+.marginButtonTitoloDettaglio{
+    margin-top: 0.35rem !important;
+}
+
+.fontStatoPem {
+    font-size: 1.4rem !important;
+    color: #6a6d70 !important;
+    line-height: 25px !important;
+}
+
+.fontNoteRifiuto{
+    line-height: 50px !important;
+}
+
+.roundedWhite {
+    background-color: white !important;
+    border-radius: 0.3rem !important;
+    border-style: groove !important;
+    border-color: white !important;
+}
+
+.seriali {
+    background-color: white !important;
+}
+
+.marginKPITitles {
+    margin-top: 1rem !important; 
+    /* margin-bottom: 0.2rem !important; */
+    margin-left: 1rem !important;
+    font-size: 1.2rem !important;
+    color: #003478 !important;
+}
+
+.marginKPIButtonPem {
+    margin-top: 0.7rem !important;
+}
+
+.marginButtonKpi {
+    margin-top: 1.2rem !important; 
+}
+
+.valoriKPI {
+    font-size: 2rem !important;
+    line-height: 30px !important;
+    color: grey !important;
+}
+
+.marginKPIBottom {
+    margin-bottom: 0.5rem !important;
+}
+
+.iconButtonAction{
+    background-color: #9fffff !important;
+    border-radius: 0.5rem
+}
+.marginKPIRight {
+    margin-right: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.marginKPI3 {
+    margin-bottom: 0.5rem !important;
+}
+
+.panelBackground {
+    background-color: #fbf4d5 !important;
+    border-radius: .0rem
+}
+
+.sapMPanel{
+    border-radius: 0px
+}
+
+.paddingStartFiltri  {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    padding-top: 1rem !important;
+}

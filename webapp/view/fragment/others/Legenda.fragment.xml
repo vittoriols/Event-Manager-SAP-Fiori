@@ -1,0 +1,37 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<Popover
+		title="Legenda Stati Eventi"
+		titleAlignment="Center"
+		placement="Right"
+		class="PopOver">
+		<VBox class="sapUiTinyMarginTop">
+			<HBox class="sapUiSmallMarginBeginEnd">
+				<core:Icon src="sap-icon://circle-task-2" class="sapUiSmallMarginEnd" color="#2C962C"/>  
+				<!-- //VERDE -->
+				<Label text="Approvato"></Label>
+			</HBox>
+			<HBox class="sapUiSmallMarginBeginEnd">
+				<core:Icon src="sap-icon://circle-task-2" class="sapUiSmallMarginEnd" color="#0F52BA"/>   
+				<!-- //BLU -->
+				<Label text="Modificato" wrapping="true"></Label>
+			</HBox>
+			<HBox class="sapUiSmallMarginBeginEnd">
+				<core:Icon src="sap-icon://circle-task-2" class="sapUiSmallMarginEnd" color="#ffa500"/>    
+				<!-- //ARANCIONE -->
+				<Label text="Da Approvare" wrapping="true"></Label>
+			</HBox>
+			<HBox class="sapUiSmallMarginBeginEnd">
+				<core:Icon src="sap-icon://circle-task-2" class="sapUiSmallMarginEnd" color="#b3b5b6"/>    
+				<!-- //GRIGIO -->
+				<Label text="Anullato" wrapping="true"></Label>
+			</HBox>
+			<HBox class="sapUiSmallMarginBeginEnd">
+				<core:Icon src="sap-icon://circle-task-2" class="sapUiSmallMarginEnd" color="#FF0000"/>    
+				<!-- //ROSSO -->
+				<Label text="Scaduto" wrapping="true"></Label>
+			</HBox>
+		</VBox>
+	</Popover>
+</core:FragmentDefinition>

@@ -1,0 +1,54 @@
+<c:FragmentDefinition
+	xmlns:t="sap.ui.table" xmlns:mvc="sap.ui.core.mvc" displayBlock="true" 
+	xmlns:fb="sap.ui.comp.filterbar" xmlns:l="sap.ui.layout" xmlns:f="sap.f" xmlns:c="sap.ui.core" xmlns="sap.m" xmlns:u="sap.ui.unified"
+	xmlns:card="sap.f.cards"
+	xmlns:w="sap.ui.integration.widgets"
+	height="100%"
+>
+
+<OverflowToolbar class="sapUiSmallMarginBeginEnd sapUiSmallMarginTop" >
+				<Label text="Nessun Preferito" id="labelNumPreferiti" class="fontLabelTabella" />
+				<ToolbarSpacer id="idToolbarSpacer2" />
+								
+				<SearchField class="sapUiSmallMarginEnd" id="searchFav" placeholder="Ricerca per ..." liveChange="liveSearch" width="30%" />
+				<Button text="Export XLS" type="Emphasized" tooltip="Esporta Iniziative su Excel" icon="sap-icon://excel-attachment" class="sapUiSmallMarginEnd" press="exportToExcelFav" />
+				<Button tooltip="Ordinamento Colonne" icon="sap-icon://sort" press="sortDialogOpenFav"/>
+
+			</OverflowToolbar>
+			<t:Table
+				id="tablePreferitiTest"
+				rows="{path: 'listaPreferitiMock>/'}"
+				selectionMode="None"
+				ariaLabelledBy="title"
+                rowActionCount="12">
+                
+				<t:extension>
+					<OverflowToolbar style="Clear">
+						
+					</OverflowToolbar>
+				</t:extension>
+                
+				<t:columns>
+					<t:Column>
+						<Label text="Product Name" />
+						<t:template>
+							<Text text="{listaPreferitiMock>name}" wrapping="false"/>
+						</t:template>
+                        
+					</t:Column>
+					<t:Column>
+						<Label text="Product Id" />
+						<t:template>
+							<Text text="{age}" wrapping="false"/>
+						</t:template>
+					</t:Column>
+					
+				</t:columns>
+                <t:rowActionTemplate>
+                            <t:RowAction>
+                                    <t:RowActionItem press="onSelectPriceGroup"				type="Navigation" icon="sap-icon://feeder-arrow" />
+                                     <t:RowActionItem press="onSelectPriceGroup2"				type="Delete" icon="sap-icon://delete" />
+                            </t:RowAction>
+                        </t:rowActionTemplate>
+			</t:Table>
+</c:FragmentDefinition>

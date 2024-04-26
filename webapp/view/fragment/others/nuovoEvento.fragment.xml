@@ -1,0 +1,133 @@
+<c:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:c="sap.ui.core"
+	xmlns:l="sap.ui.layout"
+	xmlns:f="sap.ui.layout.form"
+>
+<Dialog
+		id ="NewEventDialog"
+		title="Nuovo Evento"
+		contentWidth="50%"
+		contentHeight="60%"
+		afterClose="destroyEditDialog"
+	>
+		<content>
+			<VBox 
+				class="sapUiSmallMargin"
+				alignItems="Start"
+				justifyContent="Start">
+		<f:SimpleForm id="SimpleFormChange480_12120Dual"
+			editable="true"
+			layout="ColumnLayout"  
+			labelSpanXL="4"
+			labelSpanL="4"
+			labelSpanM="12"
+			labelSpanS="12"
+			adjustLabelSpan="false"
+			emptySpanXL="0"
+			emptySpanL="0"
+			emptySpanM="0"
+			emptySpanS="0"
+			columnsXL="2"
+			columnsL="2"
+			columnsM="2"
+			singleContainerFullSize="false" >
+			<f:content>
+				<c:Title text="Dati Generali" />
+				<Label text="Titolo" />
+				<Input required="true" value="{path: '/titolo'}" id="idNewTitolo" />
+				
+				<Label text="Location" />
+				<Input required="true" id="idNewCitta" value="{path: '/location'}">
+				
+				</Input>
+				<!-- <Input value="{HouseNumber}">
+					<layoutData>
+						<l:GridData span="XL2 L3 M4 S4" />
+					</layoutData>
+				</Input> -->
+				<!-- <HBox>
+				<VBox> -->
+				<Label text="Data" />
+				<DatePicker
+					id="idNewData"
+					value="{path: '/date'}"
+					required="true"
+					valueFormat="yyyy-MM-dd'T'00:00:00"
+					placeholder="Scegli data evento"
+					change="handleChange"
+					class="sapUiSmallMarginBottom"/>
+				
+				<!-- </VBox>
+				<VBox> -->
+				<Label text="Ora" />
+				<TimePicker
+					id="idNewOra"
+					required="true"
+					value="{path: '/time'}"
+					change="handleChange"
+					maskMode="{= ${/maskMode/state} ? 'On' : 'Off'}"
+					placeholder="Scegli ora evento"
+					valueFormat="HH:mm:ss"
+					 />
+				<!-- </VBox>
+				</HBox> -->
+				<Label text="Tipo Evento" />
+				<Select required="true" id="idNewTipo" value="{path: '/tipo'}">
+					<items>
+						<c:Item text="Interno IBM" key="01"/>
+						<c:Item text="Esterno" key="02"/>
+					</items>
+				</Select>
+				
+					<!-- <MultiComboBox
+						id="idCategoriaEventoCB2"
+						placeholder="Categoria Evento"
+						selectionChange="handleSelectionChange"
+						selectionFinish="handleSelectionFinish"
+						width="350px"
+						items="{listaCategorieEventi>/}">
+						<c:Item key="{listaCategorieEventi>Cod}" text="{listaCategorieEventi>Categoria}"/>
+					</MultiComboBox> -->
+					<ComboBox
+						id="idNewCategoria"
+						value="{path: '/category'}"
+						required="true"
+						placeholder="Categoria Evento"
+						width="100%"
+						items="{listaCategorieEventi>/}"
+					>
+						<c:Item
+							id="id233Item"
+							key="{listaCategorieEventi>Cod}"
+							text="{listaCategorieEventi>Categoria}"
+						/>
+					</ComboBox> 
+				<c:Title text="Riferimenti" />
+				<Label text="Sito Web" />
+				<Input  id="idNewSitoWeb"/>
+				<Label text="Note" />
+				<!-- <Input value=""  /> -->
+				<TextArea id="idNewNote"  growing ="true" showExceededText="false" maxLength="250" width="100%" liveChange="handleLiveChange" valueState="None" valueLiveUpdate="true"/>
+				<!-- <Text text="showExceededText = false;" class="sapUiTinyMarginTop"/> -->
+				<!-- <TextArea value="Lorem ipsum dolor sit amet, consectetur el" maxLength="40" width="100%"/> -->
+			</f:content>
+		</f:SimpleForm>
+	</VBox>
+			
+		</content>
+		<beginButton>
+			<Button
+				text="Conferma"
+				type="Emphasized"
+				press="onDialogNewEventConferma"
+			/>
+		</beginButton>
+		<endButton>
+			<Button
+				text="Annulla"
+				press="onDialogEditOrderRowClose"
+			/>
+		</endButton>
+	</Dialog>
+</c:FragmentDefinition>
