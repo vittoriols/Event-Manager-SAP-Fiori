@@ -91,7 +91,7 @@ sap.ui.define([], function () {
             } else if (oVal === "02") {
                 return "Esterno"
             } else {
-                return ""  //Altri Stati --> Verde
+                return ""  
             }
         },
 

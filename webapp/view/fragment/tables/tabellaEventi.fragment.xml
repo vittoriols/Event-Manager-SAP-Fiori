@@ -25,7 +25,8 @@
 				<Button tooltip="Ordinamento Colonne" icon="sap-icon://sort" press="sortDialogOpen"/>
 
 			</OverflowToolbar>
-			<t:Table class="sapUiSmallMarginBeginEnd pointer" id="tabListaEventi"
+			<ScrollContainer>
+			<t:Table class="sapUiSmallMarginBeginEnd pointer" id="tabListaEventi" 
 			    visible="{visibilityModel>/gestOrdGroupVisible}"
 				rows="{path: 'listaEventi>/'}"
 				selectionMode="None"
@@ -55,7 +56,7 @@
 							<Label text="{path: 'listaEventi>Ztype' , formatter: '.formatter.formatTipo'}"  wrapping="true" />
 						</t:template>
 					</t:Column>
-					<t:Column  id="idCategoria" width="20rem">
+					<t:Column  id="idCategoria" width="10rem">
 						<Label text="Categoria Evento" />
 						<t:template>
 							<Label text="{path: 'listaEventi>Zcategory' , formatter: '.formatter.formatCategoria'}"  wrapping="true" />
@@ -73,18 +74,19 @@
 							<Label text="{path: 'listaEventi>Zdate' , formatter: '.formatter.formatData'}"  wrapping="true" target="_blank"/>
 						</t:template>
 					</t:Column >
-					<t:Column width="9rem">
+					<t:Column width="6rem">
 						<Label text="Orario" wrapping="true"/>
 						<t:template>
 							<Label text="{path: 'listaEventi>Ztime'}"  wrapping="true" target="_blank"/>
 						</t:template>
 					</t:Column >
-					<t:Column  width="7rem" hAlign="Center">
+					<t:Column  width="10rem" hAlign="Center">
 						<Label text="Azione" />
 						<t:template>
                             <HBox alignContent="Center" justifyContent="Center">
-                                <Button press="onAddFavourite" icon="sap-icon://add-favorite" visible="{path: 'listaListiniModel>Stato', formatter: '.formatter.setVisibleStato01'}" />
-                                <Button press="onEnterDetail" icon="sap-icon://feeder-arrow" visible="{path: 'listaListiniModel>Stato', formatter: '.formatter.setVisibleStato02'}" />
+                                <Button press="onAddFavourite" class="sapUiSmallMarginBeginEnd" icon="sap-icon://add-favorite" visible="{path: 'listaListiniModel>Stato', formatter: '.formatter.setVisibleStato01'}" />
+                                <Button press="onApprove" class="sapUiSmallMarginEnd" icon="sap-icon://accept" visible="{path: 'listaListiniModel>Stato', formatter: '.formatter.setVisibleStato01'}" />
+                                <Button press="onEnterDetail"  class="sapUiSmallMarginEnd" icon="sap-icon://feeder-arrow" visible="{path: 'listaListiniModel>Stato', formatter: '.formatter.setVisibleStato02'}" />
 								
                             </HBox>
 						</t:template>
@@ -97,5 +99,6 @@
                             </t:RowAction>
                         </t:rowActionTemplate> -->
 			</t:Table>
+			</ScrollContainer>
 </c:FragmentDefinition>
 

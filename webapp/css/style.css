@@ -102,6 +102,14 @@
     line-height: 20px;
 }
 
+.DettaglioEvento  {
+    /* text-decoration: underline !important; */
+    /* font-weight: bold !important; */
+    text-underline-offset: 4px;
+    letter-spacing: 0;
+    line-height: 20px;
+}
+
 .TextColorFilter {
     color: #1D2D3E !important;
 }

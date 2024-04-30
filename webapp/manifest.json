@@ -103,6 +103,20 @@
           "target": [
             "TargetMainview"
           ]
+        },
+        {
+          "name": "ModificaCodici",
+          "pattern": "ModificaCodici",
+          "target": [
+            "ModificaCodici"
+          ]
+        },
+        {
+          "name": "DettaglioEvento",
+          "pattern": "DettaglioEvento",
+          "target": [
+            "DettaglioEvento"
+          ]
         }
       ],
       "targets": {
@@ -112,6 +126,16 @@
           "clearControlAggregation": false,
           "viewId": "Mainview",
           "viewName": "Mainview"
+        },
+        "ModificaCodici": {
+          "viewType": "XML",
+          "viewName": "ModificaCodici",
+          "viewLevel": 2
+        },
+        "DettaglioEvento": {
+          "viewType": "XML",
+          "viewName": "DettaglioEvento",
+          "viewLevel": 2
         }
       }
     },

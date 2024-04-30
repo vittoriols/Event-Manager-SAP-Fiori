@@ -46,11 +46,13 @@ sap.ui.define([
     ) {
         "use strict";
         let SortOrder = library.SortOrder;
+        let pathMoreAction;
         // attach handlers for validation errors
         var oMM = Messaging;
         return Controller.extend("zui5eventm.zui5eventm.controller.Mainview", {
-            formatter: formatter,
             Controller: this,
+            formatter: formatter,
+
             Messaging: Messaging,
             onInit: function () {
                 var visibilityModel = {
@@ -176,17 +178,17 @@ sap.ui.define([
 
                 var oData = [
                     {
-                        "name": "Foo",
-                        "age": 30
+                        "Ztitle": "Foo",
+                        "Zstatus": "01"
                     },
                     {
-                        "name": "Bee",
-                        "age": 20
+                        "Ztitle": "Bee",
+                        "Zstatus": "02"
                     }
                 ]
                 let listaPreferitiMock = new JSONModel();
                 listaPreferitiMock.setData(oData);
-                this.getView().byId("tablePreferitiTest").setModel(listaPreferitiMock, "listaPreferitiMock");
+                this.getView().byId("tabListaPreferiti").setModel(listaPreferitiMock, "listaPreferitiMock");
 
                 let dataObject = {
                     Name: "",
@@ -388,6 +390,8 @@ sap.ui.define([
                 this.getView().byId("idNewTipo").setValue("");
                 this.getView().byId("idNewCategoria").setValueState("None");
                 this.getView().byId("idNewCategoria").setValue("");
+                this.getView().byId("idNewNote").setValue("");
+                this.getView().byId("idNewSitoWeb").setValue("");
                 this.oDialog.close();
                 // this.oDialog.destroy();
             },
@@ -479,6 +483,7 @@ sap.ui.define([
                         INote: newNote,
                         ITime: newOraString,
                         IType: newTipo,
+                        ISitoweb: newSitoWeb,
                         // communications: []  // contain multiple communications 
                     };
                     // var oInput = oEvent.getSource(); // prendo il componente
@@ -504,6 +509,7 @@ sap.ui.define([
                             console.log("create completata!");
                             sap.ui.core.BusyIndicator.hide();
                             oEvent.getSource().getParent().close(); //Chiudi DIALOG FRAGMENT!!
+                            MessageToast.show("Evento Creato, ora é in attesa di approvazione.");
                             // for (var i = 0; i < results.length; i++) {
 
                             //     inputService.addSuggestionItem(new sap.ui.core.Item({ key: results[i].SrvNumber, text: results[i].SrvNumber }));
@@ -514,7 +520,7 @@ sap.ui.define([
                             sap.ui.core.BusyIndicator.hide();
                         }
                     });
-                    MessageToast.show("Evento Creato, ora é in attesa di approvazione.");
+                    // MessageToast.show("Evento Creato, ora é in attesa di approvazione.");
                 } else {
                     MessageBox.alert("Inserire i campi obbligatori, poi riprovare.");
                 }
@@ -831,6 +837,37 @@ sap.ui.define([
                 this.legendaPopover.then(function (oPopover) {
                     oPopover.openBy(oButton);
                 });
+            },
+
+            onEnterDetail: function (oEvent) {
+                // pathMoreAction = oEvent.getSource().getParent().getIndex();
+                // let path = Number(oEvent.getParameters().rowBindingContext.getPath().replace("/", ""));
+                // let columnIndex = Number(oEvent.getParameter("columnIndex"));
+                let oRiga = oEvent.getSource().getParent().getParent().getRowBindingContext(); // OTTIENI RIGA
+                let oIndice = oRiga.getPath().replace("/", "");
+                let dataEvento = this.getView().byId("tabListaEventi").getModel("listaEventi").getData();
+                // let rowSelected = JSON.parse(JSON.stringify(dataEvento[pathMoreAction]));
+                let oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+
+                let navModel = new JSONModel();
+                navModel.setData({
+                    Ztitle: oRiga.getProperty("Ztitle"),
+                    Zaddress: oRiga.getProperty("Zaddress"),
+                    ZcreateUser: oRiga.getProperty("ZcreateUser"),
+                    Zdate: oRiga.getProperty("Zdate"),
+                    Zeventid: oRiga.getProperty("Zeventid"),
+                    Znote: oRiga.getProperty("Znote"),
+                    Zstatus: oRiga.getProperty("Zstatus"),
+                    Ztime: oRiga.getProperty("Ztime"),
+                    Ztype: oRiga.getProperty("Ztype"),
+                    Zcategory: oRiga.getProperty("Zcategory"),
+                    Zsitoweb: oRiga.getProperty("Zsitoweb"),
+                })
+                sap.ui.getCore().setModel(navModel, "navModel");
+                // sap.ui.core.BusyIndicator.show(0);
+
+
+                oRouter.navTo("DettaglioEvento");
             },
 
             liveSearch: function (oEvent) {
