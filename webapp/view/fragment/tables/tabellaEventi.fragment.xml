@@ -85,7 +85,9 @@
 						<t:template>
                             <HBox alignContent="Center" justifyContent="Center">
                                 <Button press="onAddFavourite" class="sapUiSmallMarginBeginEnd" icon="sap-icon://add-favorite" visible="{path: 'listaListiniModel>Stato', formatter: '.formatter.setVisibleStato01'}" />
-                                <Button press="onApprove" class="sapUiSmallMarginEnd" icon="sap-icon://accept" visible="{path: 'listaListiniModel>Stato', formatter: '.formatter.setVisibleStato01'}" />
+                                <!-- <Button press="onApprove" class="sapUiSmallMarginEnd" icon="sap-icon://accept" visible="{path: 'managerCheck>/authorization', formatter: '.formatter.setVisibleManager'}" /> -->
+                                <!-- <Button press="onApprove" class="sapUiSmallMarginEnd" icon="sap-icon://accept" visible="{parts [path: 'listaListiniModel>Stato', managerCheck>/authorization], formatter: '.formatter.setVisibleManager'}" /> -->
+                                <Button press="onApprove" class="sapUiSmallMarginEnd" icon="sap-icon://accept" visible="{parts: ['listaEventi>Zstatus','managerCheck>/authorization'], formatter: '.formatter.setVisibleManager' }" />
                                 <Button press="onEnterDetail"  class="sapUiSmallMarginEnd" icon="sap-icon://feeder-arrow" visible="{path: 'listaListiniModel>Stato', formatter: '.formatter.setVisibleStato02'}" />
 								
                             </HBox>

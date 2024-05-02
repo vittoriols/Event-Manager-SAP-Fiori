@@ -47,6 +47,7 @@ sap.ui.define([
         "use strict";
         let SortOrder = library.SortOrder;
         let pathMoreAction;
+        let userType = 'USER'
         // attach handlers for validation errors
         var oMM = Messaging;
         return Controller.extend("zui5eventm.zui5eventm.controller.Mainview", {
@@ -68,8 +69,15 @@ sap.ui.define([
                     dynPageTitleVisible: true,
                     dynPageHeaderVisible: true,
                     fullEditBtnVisible: false,
-                    detailRitardoConsegne: false,
+                    detailRitardoConsegne: false
                 };
+
+                var managerCheck = {authorization: false};
+
+                this.getView().setModel(
+                    new JSONModel(managerCheck),
+                    "managerCheck"
+                );
 
                 this.getView().setModel(
                     new JSONModel(visibilityModel),
@@ -242,7 +250,31 @@ sap.ui.define([
                 });
                 this.getView().setModel(oModelTime);
                 this._iEvent = 0;
+                var that = this;
+                /// VERIFICA RUOLO UTENTE //////////////////////////////////
+                sap.ui.core.BusyIndicator.show(0);
+                let oModelEcc = this.getOwnerComponent().getModel();
+                oModelEcc.setUseBatch(false);
+                oModelEcc.read("/ManagerCheckSet", {
+                    success: function (oRetrievedResult) {
+                        
+                        let listaEventi = new JSONModel();
+                        let tempData = oRetrievedResult.results;
 
+                        if ( tempData.length > 0 && tempData[0].Zactive === "X" ) {
+                            userType = 'MANAGER';
+                            managerCheck.authorization = true;
+                            console.log("Utente MANAGER");
+                        } else {
+                            console.log("Utente NORMALE");
+                        }
+
+                    },
+                    error: function (oError) {
+                    }
+                });
+                sap.ui.core.BusyIndicator.hide();
+                ////////////////////////////////////////////////////////////
             }, // fine onInit
 
             onAzzeraFiltri: function () {
@@ -839,6 +871,48 @@ sap.ui.define([
                 });
             },
 
+            onAddFavourite: async function (oEvent) {
+
+                let oRiga = oEvent.getSource().getParent().getParent().getRowBindingContext(); // OTTIENI RIGA
+                let oIndice = oRiga.getPath().replace("/", "");
+                let dataEvento = this.getView().byId("tabListaEventi").getModel("listaEventi").getData();
+                // let rowSelected = JSON.parse(JSON.stringify(dataEvento[pathMoreAction]));
+                let oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+
+                let favEventId = oRiga.getProperty("Zeventid");
+                let favUser = 'Default';
+                let favAction = 'I';
+
+                // Al backend serve
+
+                var userRequestBody = {
+                    IEvent: favEventId,
+                    IUser: favUser,
+                    IAction: favAction
+                };
+                let oModelEcc = this.getOwnerComponent().getModel(); // prendo il modello 
+
+                oModelEcc.setUseBatch(false); // cosi dico che non voglio fare una chiamata batch, ossia che raggruppa piu chiamate al suo interno
+                let run = oEvent.getSource();  // ALTERNATIVA AL RIGO DI SOPRA MA PIU EFFICIENTE
+                run.setBusy(true); // mette il busy sul pulsante
+                // sap.ui.core.BusyIndicator.show(0);
+                oModelEcc.create("/ManageFavouriteSet", userRequestBody, { // qui devo mettere il nome dell'entitá ossia quella che sta dopo il servizio nell'url
+                    success: function (oResult) {
+                        let results = oResult.results;
+                        run.setBusy(false);
+                        MessageToast.show("Evento aggiunto ai preferiti");
+                    },
+                    error: function (oError) {
+                        MessageToast.show("Errore");
+                        // sap.ui.core.BusyIndicator.hide();
+                        run.setBusy(false);
+                    }
+                });
+
+            },
+
+
+
             onEnterDetail: function (oEvent) {
                 // pathMoreAction = oEvent.getSource().getParent().getIndex();
                 // let path = Number(oEvent.getParameters().rowBindingContext.getPath().replace("/", ""));
@@ -869,6 +943,7 @@ sap.ui.define([
 
                 oRouter.navTo("DettaglioEvento");
             },
+
 
             liveSearch: function (oEvent) {
                 var sQuery = oEvent.getSource().getValue();

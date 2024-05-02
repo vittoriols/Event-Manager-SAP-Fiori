@@ -103,6 +103,14 @@ sap.ui.define([], function () {
             }
         },
 
+        setVisibleManager: function (oStatus,oStato) {
+            if (oStatus === "01" && oStato) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+
         setVisibleStato02: function (oVal) {
             if (oVal === "02") {
                 return true;
