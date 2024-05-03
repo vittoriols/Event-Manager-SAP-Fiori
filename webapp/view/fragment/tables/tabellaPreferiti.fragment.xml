@@ -15,7 +15,7 @@
 
 			</OverflowToolbar>
 			<t:Table class="sapUiSmallMarginBeginEnd pointer" id="tabListaPreferiti"
-				rows="{path: 'listaPreferitiMock>/'}"
+				rows="{path: 'listaPreferitiModel>/'}"
 				selectionMode="None"
 				visibleRowCount="10"
 				busyIndicatorDelay="0"
@@ -27,51 +27,51 @@
 					<t:Column width="5rem" hAlign="Center" >
 						<Label text="Stato" />
 						<t:template>
-							<c:Icon src="sap-icon://circle-task-2" tooltip="{path: 'listaPreferitiMock>Zstatus' , formatter: '.formatter.formatDescrizioneStato'}" color="{path: 'listaPreferitiMock>Zstatus', formatter: '.formatter.formatColorStato'}" class="sizeIconHome marginTopIconTable "/>
+							<c:Icon src="sap-icon://circle-task-2" tooltip="{path: 'listaPreferitiModel>Zstatus' , formatter: '.formatter.formatDescrizioneStato'}" color="{path: 'listaPreferitiModel>Zstatus', formatter: '.formatter.formatColorStato'}" class="sizeIconHome marginTopIconTable "/>
 						</t:template>
 					</t:Column>
 					<t:Column  id="idService2">
 						<Label text="Evento" />
 						<t:template>
-							<Label text="{listaPreferitiMock>Ztitle}"  wrapping="true" />
+							<Label text="{listaPreferitiModel>Ztitle}"  wrapping="true" />
 						</t:template>
 					</t:Column>
 					<t:Column width="13rem" id="idDipendente2">
 						<Label text="Tipo" />
 						<t:template>
-							<Label text="{path: 'listaPreferitiMock>Ztype' , formatter: '.formatter.formatTipo'}"  wrapping="true" />
+							<Label text="{path: 'listaPreferitiModel>Ztype' , formatter: '.formatter.formatTipo'}"  wrapping="true" />
 						</t:template>
 					</t:Column>
 					<t:Column  id="idCategoria2" width="20rem">
 						<Label text="Categoria Evento" />
 						<t:template>
-							<Label text="{path: 'listaPreferitiMock>Zcategory' , formatter: '.formatter.formatCategoria'}"  wrapping="true" />
+							<Label text="{path: 'listaPreferitiModel>Zcategory' , formatter: '.formatter.formatCategoria'}"  wrapping="true" />
 						</t:template>
 					</t:Column>
 					<t:Column id="idPernr2" width="30rem" >
 						<Label text="Location"  wrapping="true"/>
 						<t:template>
-							<Label text="{listaPreferitiMock>Zaddress}" wrapping="true"/>
+							<Label text="{listaPreferitiModel>Zaddress}" wrapping="true"/>
 						</t:template>
 					</t:Column>
-					<!-- <t:Column width="9rem" >
+					<t:Column width="9rem" >
 						<Label text="Data" wrapping="true"/>
 						<t:template>
-							<Label text="{path: 'listaPreferitiMock>Zdate' , formatter: '.formatter.formatData'}"  wrapping="true" target="_blank"/>
+							<Label text="{path: 'listaPreferitiModel>Zdate' , formatter: '.formatter.formatData'}"  wrapping="true" target="_blank"/>
 						</t:template>
-					</t:Column > -->
-					<!-- <t:Column width="9rem">
+					</t:Column >
+					<t:Column width="9rem">
 						<Label text="Orario" wrapping="true"/>
 						<t:template>
-							<Label text="{path: 'listaEventi>Ztime'}"  wrapping="true" target="_blank"/>
+							<Label text="{path: 'listaPreferitiModel>Ztime'}"  wrapping="true" target="_blank"/>
 						</t:template>
-					</t:Column > -->
+					</t:Column >
 					<t:Column  width="10rem" hAlign="Center">
 						<Label text="Azione" />
 						<t:template>
                             <HBox alignContent="Center" justifyContent="Center">
-                                <Button press="onDelFavourite" class="sapUiSmallMarginBeginEnd" icon="sap-icon://delete" visible="{path: 'listaListiniModel>Stato', formatter: '.formatter.setVisibleStato01'}" />
-                                <Button press="onEnterDetail"  class="sapUiSmallMarginEnd" icon="sap-icon://feeder-arrow" visible="{path: 'listaListiniModel>Stato', formatter: '.formatter.setVisibleStato02'}" />
+                                <Button press="onDelFavourite" class="sapUiSmallMarginBeginEnd" icon="sap-icon://delete"  />
+                                <Button press="onEnterDetailFav"  class="sapUiSmallMarginEnd" icon="sap-icon://feeder-arrow"/>
 								
                             </HBox>
 						</t:template>

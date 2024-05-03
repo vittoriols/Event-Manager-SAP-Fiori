@@ -194,10 +194,11 @@ sap.ui.define([
                         "Zstatus": "02"
                     }
                 ]
-                let listaPreferitiMock = new JSONModel();
-                listaPreferitiMock.setData(oData);
-                this.getView().byId("tabListaPreferiti").setModel(listaPreferitiMock, "listaPreferitiMock");
+                let listaPreferitiModel = new JSONModel();
 
+                // listaPreferitiModel.setData(listaPreferitiModel);
+                // this.getView().byId("tabListaPreferiti").setModel(listaPreferitiModel, "listaPreferitiModel");
+                this.aggiornaPreferiti();
                 let dataObject = {
                     Name: "",
                     Subject1: "",
@@ -277,6 +278,7 @@ sap.ui.define([
                 ////////////////////////////////////////////////////////////
             }, // fine onInit
 
+
             onAzzeraFiltri: function () {
                 this.getView().byId("idNumOrdGOMultiInput").destroyTokens(); //Multiinput
                 this.getView().byId("idIndirizzoGOInput").setValue(''); // Input
@@ -346,6 +348,37 @@ sap.ui.define([
                 });
             },
 
+            aggiornaPreferiti: async function (oEvent) {
+                // this.getView().byId("tabListaPreferiti").setModel(listaPreferitiModel, "listaPreferitiModel");
+                var that = this;
+                let oModelEcc = this.getOwnerComponent().getModel();
+                oModelEcc.setUseBatch(false);
+                oModelEcc.read("/GetFavouritesSet", {
+                    success: function (oRetrievedResult) {
+                        let listaPreferitiModel = new JSONModel();
+                        let tempData = oRetrievedResult.results;
+
+                        for (var i = 0; i < tempData.length; i++) {
+                            tempData[i].Ztime = that._msToHMS(tempData[i].Ztime.ms)
+                        }
+
+                        listaPreferitiModel.setData(tempData);
+                        that.getView().byId("tabListaPreferiti").setModel(listaPreferitiModel, "listaPreferitiModel");
+                        that.getView().getModel().refresh(true);
+                        // that.getView().byId("tabListaPreferiti").getBinding("items").refresh();
+                        if ( tempData.length > 0 ){
+                            that.byId("labelNumPreferiti").setText("Preferiti: " + tempData.length);
+                        } else {
+                            that.byId("labelNumPreferiti").setText("Nessun Preferito");  
+                        };
+                        
+                    },
+                    error: function (oError) {
+                        // table.setBusy(false);
+                    }
+                });
+            },
+
             onPressNuovoEvento: async function (oEvent) {
 
 
@@ -402,11 +435,7 @@ sap.ui.define([
 
                 this.oDialog.open();
                 this.getView().byId("idNewCategoria").setModel(listaCategorieEventi, "listaCategorieEventi");
-                // this.getView().byId("idNewTipo").setSelectedKey("");
-                // attach handlers for validation errors
-                // var oMMLocal = oMM;
-                // oMMLocal.registerObject(oView.byId("idNewTitolo"), true);
-                // oMMLocal.registerObject(oView.byId("idNewCitta"), true);
+
             },
 
             onDialogEditOrderRowClose: function (oEvent) {
@@ -872,7 +901,7 @@ sap.ui.define([
             },
 
             onAddFavourite: async function (oEvent) {
-
+                var that = this;
                 let oRiga = oEvent.getSource().getParent().getParent().getRowBindingContext(); // OTTIENI RIGA
                 let oIndice = oRiga.getPath().replace("/", "");
                 let dataEvento = this.getView().byId("tabListaEventi").getModel("listaEventi").getData();
@@ -900,6 +929,7 @@ sap.ui.define([
                     success: function (oResult) {
                         let results = oResult.results;
                         run.setBusy(false);
+                        that.aggiornaPreferiti();
                         MessageToast.show("Evento aggiunto ai preferiti");
                     },
                     error: function (oError) {
@@ -910,8 +940,74 @@ sap.ui.define([
                 });
 
             },
+            onDelFavourite: async function (oEvent) {
+                let oRiga = oEvent.getSource().getParent().getParent().getRowBindingContext(); // OTTIENI RIGA
+                let oIndice = oRiga.getPath().replace("/", "");
+                let dataEvento = this.getView().byId("tabListaPreferiti").getModel("listaPreferitiModel").getData();
+                let oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+
+                let favEventId = oRiga.getProperty("Zeventid");
+                let favUser = 'Default';
+                let favAction = 'D';
+
+                let oModelEcc = this.getOwnerComponent().getModel();  
+                oModelEcc.setUseBatch(false); 
+                let run = oEvent.getSource(); 
+                run.setBusy(true); // mette il busy sul pulsante
+                // sap.ui.core.BusyIndicator.show(0);
+                // /ManageFavouriteSet(IAction='D',IEvent='10',IUser='VSIMONETTI')
+                let oPath = () => oModelEcc.createKey("/ManageFavouriteSet", {
+                    IAction: favAction, // gets encoded as 'leer%20zeich'
+                    IEvent: favEventId,
+                    IUser: favUser
+                  });
+                // let oPath = "/ManageFavouriteSet('IAction'"+"='"+favAction+"','IEvent'='"+favEventId+"','IUser'='"+favUser+"')";
+                oModelEcc.remove(oPath(),  { // qui devo mettere il nome dell'entitá ossia quella che sta dopo il servizio nell'url
+                    success: function (oResult) {
+                        // let results = oResult.results;
+                        run.setBusy(false);
+                        MessageToast.show("Evento rimosso");
+                    },
+                    error: function (oError) {
+                        MessageToast.show("Errore");
+                        // sap.ui.core.BusyIndicator.hide();
+                        run.setBusy(false);
+                    }
+                });
+
+                this.aggiornaPreferiti();
+            },
+
+            onEnterDetailFav: function (oEvent) {
+                // pathMoreAction = oEvent.getSource().getParent().getIndex();
+                // let path = Number(oEvent.getParameters().rowBindingContext.getPath().replace("/", ""));
+                // let columnIndex = Number(oEvent.getParameter("columnIndex"));
+                let oRiga = oEvent.getSource().getParent().getParent().getRowBindingContext(); // OTTIENI RIGA
+                let oIndice = oRiga.getPath().replace("/", "");
+                let dataEvento = this.getView().byId("tabListaPreferiti").getModel("listaPreferitiModel").getData();
+                // let rowSelected = JSON.parse(JSON.stringify(dataEvento[pathMoreAction]));
+                let oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+
+                let navModel = new JSONModel();
+                navModel.setData({
+                    Ztitle: oRiga.getProperty("Ztitle"),
+                    Zaddress: oRiga.getProperty("Zaddress"),
+                    ZcreateUser: oRiga.getProperty("ZcreateUser"),
+                    Zdate: oRiga.getProperty("Zdate"),
+                    Zeventid: oRiga.getProperty("Zeventid"),
+                    Znote: oRiga.getProperty("Znote"),
+                    Zstatus: oRiga.getProperty("Zstatus"),
+                    Ztime: oRiga.getProperty("Ztime"),
+                    Ztype: oRiga.getProperty("Ztype"),
+                    Zcategory: oRiga.getProperty("Zcategory"),
+                    Zsitoweb: oRiga.getProperty("Zsitoweb"),
+                })
+                sap.ui.getCore().setModel(navModel, "navModel");
+                // sap.ui.core.BusyIndicator.show(0);
 
 
+                oRouter.navTo("DettaglioEvento");
+            },
 
             onEnterDetail: function (oEvent) {
                 // pathMoreAction = oEvent.getSource().getParent().getIndex();
