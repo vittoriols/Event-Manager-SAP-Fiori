@@ -21,7 +21,7 @@
 
 				
 				<SearchField class="sapUiSmallMarginEnd" id="searchList" placeholder="Ricerca per ..." liveChange="liveSearch" width="30%" />
-				<Button text="Export XLS" type="Emphasized" tooltip="Esporta Iniziative su Excel" icon="sap-icon://excel-attachment" class="sapUiSmallMarginEnd" press="exportToExcel" />
+				<Button text="Export XLS" type="Emphasized" tooltip="Esporta su Excel" icon="sap-icon://excel-attachment" class="sapUiSmallMarginEnd" press="exportToExcel" />
 				<Button tooltip="Ordinamento Colonne" icon="sap-icon://sort" press="sortDialogOpen"/>
 
 			</OverflowToolbar>
@@ -80,13 +80,21 @@
 							<Label text="{path: 'listaEventi>Ztime'}"  wrapping="true" target="_blank"/>
 						</t:template>
 					</t:Column >
-					<t:Column  width="10rem" hAlign="Center">
+					<t:Column  width="12rem" hAlign="Center">
 						<Label text="Azione" />
 						<t:template>
                             <HBox alignContent="Center" justifyContent="Center">
                                 <Button press="onAddFavourite" tooltip="Aggiungi a preferiti" class="sapUiSmallMarginBeginEnd" icon="sap-icon://add-favorite" visible="{path: 'listaListiniModel>Stato', formatter: '.formatter.setVisibleStato01'}" />
-                                <Button press="onApprove" tooltip="Approva" class="sapUiSmallMarginEnd" icon="sap-icon://accept" visible="{parts: ['listaEventi>Zstatus','managerCheck>/authorization'], formatter: '.formatter.setVisibleManager' }" />
-                                <Button press="onEnterDetail" tooltip="Dettagli Evento" class="sapUiSmallMarginEnd" icon="sap-icon://feeder-arrow" visible="{path: 'listaListiniModel>Stato', formatter: '.formatter.setVisibleStato02'}" />
+                                <!-- <Button press="onApprove" tooltip="Approva" class="sapUiSmallMarginEnd" icon="sap-icon://accept" visible="{parts: ['listaEventi>Zstatus','managerCheck>/authorization'], formatter: '.formatter.setVisibleManager' }" /> -->
+                                <MenuButton id="idMenuButton" class="sapUiSmallMarginEnd" icon="sap-icon://action-settings" defaultAction="onDefaultAction" beforeMenuOpen="onBeforeMenuOpen" useDefaultActionOnly="true" menuPosition="RightBottom" visible="{parts: ['listaEventi>Zstatus','managerCheck>/authorization'], formatter: '.formatter.setVisibleManager' }">
+									<menu>
+										<Menu itemSelected="onMenuAction" >
+											<MenuItem text="Approva" icon="sap-icon://accept" />
+											<MenuItem text="Rifiuta" icon="sap-icon://delete" />
+										</Menu>
+									</menu>
+								</MenuButton>
+								<Button press="onEnterDetail" tooltip="Dettagli Evento" class="sapUiSmallMarginEnd" icon="sap-icon://feeder-arrow" visible="{path: 'listaListiniModel>Stato', formatter: '.formatter.setVisibleStato02'}" />
 								
                             </HBox>
 						</t:template>

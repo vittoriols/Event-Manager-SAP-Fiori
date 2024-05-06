@@ -18,7 +18,8 @@ sap.ui.define([
     "sap/ui/core/Messaging",
     "sap/ui/model/ValidateException",
     "sap/m/MessageBox",
-    "sap/m/MessageToast"
+    "sap/m/MessageToast",
+    "sap/m/MenuItem"
 ],
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
@@ -43,6 +44,7 @@ sap.ui.define([
         ValidateException,
         MessageBox,
         MessageToast,
+        MenuItem
     ) {
         "use strict";
         let SortOrder = library.SortOrder;
@@ -72,7 +74,7 @@ sap.ui.define([
                     detailRitardoConsegne: false
                 };
 
-                var managerCheck = {authorization: false};
+                var managerCheck = { authorization: false };
 
                 this.getView().setModel(
                     new JSONModel(managerCheck),
@@ -258,11 +260,11 @@ sap.ui.define([
                 oModelEcc.setUseBatch(false);
                 oModelEcc.read("/ManagerCheckSet", {
                     success: function (oRetrievedResult) {
-                        
+
                         let listaEventi = new JSONModel();
                         let tempData = oRetrievedResult.results;
 
-                        if ( tempData.length > 0 && tempData[0].Zactive === "X" ) {
+                        if (tempData.length > 0 && tempData[0].Zactive === "X") {
                             userType = 'MANAGER';
                             managerCheck.authorization = true;
                             console.log("Utente MANAGER");
@@ -365,13 +367,14 @@ sap.ui.define([
                         listaPreferitiModel.setData(tempData);
                         that.getView().byId("tabListaPreferiti").setModel(listaPreferitiModel, "listaPreferitiModel");
                         that.getView().getModel().refresh(true);
-                        // that.getView().byId("tabListaPreferiti").getBinding("items").refresh();
-                        if ( tempData.length > 0 ){
+                        // that.getView().byId("tabListaPreferiti").getBinding("rows").refresh();
+                        // listaPreferitiModel.refresh();
+                        if (tempData.length > 0) {
                             that.byId("labelNumPreferiti").setText("Preferiti: " + tempData.length);
                         } else {
-                            that.byId("labelNumPreferiti").setText("Nessun Preferito");  
+                            that.byId("labelNumPreferiti").setText("Nessun Preferito");
                         };
-                        
+
                     },
                     error: function (oError) {
                         // table.setBusy(false);
@@ -831,6 +834,9 @@ sap.ui.define([
                 var seconds = ms / 1000;
                 // 2- Extract hours:
                 var hours = parseInt(seconds / 3600); // 3,600 seconds in 1 hour
+                if (hours.toString().length === 1) {
+                    hours = "0" + hours;
+                }
                 seconds = seconds % 3600; // seconds remaining after extracting hours
                 // 3- Extract minutes:
                 var minutes = parseInt(seconds / 60); // 60 seconds in 1 minute
@@ -922,7 +928,7 @@ sap.ui.define([
                 let oModelEcc = this.getOwnerComponent().getModel(); // prendo il modello 
 
                 oModelEcc.setUseBatch(false); // cosi dico che non voglio fare una chiamata batch, ossia che raggruppa piu chiamate al suo interno
-                let run = oEvent.getSource();  // ALTERNATIVA AL RIGO DI SOPRA MA PIU EFFICIENTE
+                let run = oEvent.getSource();
                 run.setBusy(true); // mette il busy sul pulsante
                 // sap.ui.core.BusyIndicator.show(0);
                 oModelEcc.create("/ManageFavouriteSet", userRequestBody, { // qui devo mettere il nome dell'entitá ossia quella che sta dopo il servizio nell'url
@@ -941,6 +947,7 @@ sap.ui.define([
 
             },
             onDelFavourite: async function (oEvent) {
+                let that = this;
                 let oRiga = oEvent.getSource().getParent().getParent().getRowBindingContext(); // OTTIENI RIGA
                 let oIndice = oRiga.getPath().replace("/", "");
                 let dataEvento = this.getView().byId("tabListaPreferiti").getModel("listaPreferitiModel").getData();
@@ -950,9 +957,9 @@ sap.ui.define([
                 let favUser = 'Default';
                 let favAction = 'D';
 
-                let oModelEcc = this.getOwnerComponent().getModel();  
-                oModelEcc.setUseBatch(false); 
-                let run = oEvent.getSource(); 
+                let oModelEcc = this.getOwnerComponent().getModel();
+                oModelEcc.setUseBatch(false);
+                let run = oEvent.getSource();
                 run.setBusy(true); // mette il busy sul pulsante
                 // sap.ui.core.BusyIndicator.show(0);
                 // /ManageFavouriteSet(IAction='D',IEvent='10',IUser='VSIMONETTI')
@@ -960,13 +967,14 @@ sap.ui.define([
                     IAction: favAction, // gets encoded as 'leer%20zeich'
                     IEvent: favEventId,
                     IUser: favUser
-                  });
+                });
                 // let oPath = "/ManageFavouriteSet('IAction'"+"='"+favAction+"','IEvent'='"+favEventId+"','IUser'='"+favUser+"')";
-                oModelEcc.remove(oPath(),  { // qui devo mettere il nome dell'entitá ossia quella che sta dopo il servizio nell'url
+                oModelEcc.remove(oPath(), { // qui devo mettere il nome dell'entitá ossia quella che sta dopo il servizio nell'url
                     success: function (oResult) {
                         // let results = oResult.results;
                         run.setBusy(false);
                         MessageToast.show("Evento rimosso");
+                        that.aggiornaPreferiti();
                     },
                     error: function (oError) {
                         MessageToast.show("Errore");
@@ -975,7 +983,7 @@ sap.ui.define([
                     }
                 });
 
-                this.aggiornaPreferiti();
+                // this.aggiornaPreferiti();
             },
 
             onEnterDetailFav: function (oEvent) {
@@ -1040,6 +1048,65 @@ sap.ui.define([
                 oRouter.navTo("DettaglioEvento");
             },
 
+            onMenuAction: function (oEvent) {
+                var oItem = oEvent.getParameter("item"),
+                    sItemPath = "";
+
+                while (oItem instanceof MenuItem) {
+                    sItemPath = oItem.getText() + " > " + sItemPath;
+                    oItem = oItem.getParent();
+                }
+
+                sItemPath = sItemPath.substr(0, sItemPath.lastIndexOf(" > "));
+
+                ///////////////////
+                let self = this;
+                let action = "";
+                let oPulsante = oEvent.getSource().getParent();
+                // let oPulsante= oEvent.getSource().getParent();
+                let oRiga = oEvent.getSource().getParent().getParent().getParent().getRowBindingContext(); // OTTIENI RIGA
+                let oIndice = oRiga.getPath().replace("/", "");
+                let dataEvento = this.getView().byId("tabListaEventi").getModel("listaEventi").getData();
+                // let rowSelected = JSON.parse(JSON.stringify(dataEvento[pathMoreAction]));
+                let oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                if (sItemPath === "Approva") {
+                    action = 'A';
+                } else if (sItemPath === "Rifiuta") {
+                    action = 'R';
+                }
+                if (action !== "") {
+                    let eventId = oRiga.getProperty("Zeventid");
+
+                    let filters = [];
+                    let IEvent = this.addFilter("IEvent", eventId);
+                    filters.push(IEvent);
+
+                    let IAction = this.addFilter("IAction", action);
+                    filters.push(IAction);
+
+                    let oModelEcc = this.getOwnerComponent().getModel();
+                    oPulsante.setBusy(true); // mette il busy sul pulsante
+                    oModelEcc.setUseBatch(false);
+                    oModelEcc.read("/EventApprovalSet", {
+                        filters: filters,
+                        success: function (oRetrievedResult) {
+                            if (action === 'A') {
+                                MessageToast.show("Evento approvato");
+                            } else {
+                                MessageToast.show("Evento rifiutato");
+                            }
+                            oPulsante.setBusy(false);
+                        },
+                        error: function (oError) {
+                            MessageToast.show("Errore");
+                            oPulsante.setBusy(false);
+                        }
+                    });
+
+                    ///////////////////
+                }
+            },
+
 
             liveSearch: function (oEvent) {
                 var sQuery = oEvent.getSource().getValue();
@@ -1052,6 +1119,20 @@ sap.ui.define([
                     ], false);
                 }
                 this._filter();
+
+            },
+
+            liveSearchFav: function (oEvent) {
+                var sQuery = oEvent.getSource().getValue();
+                this._oGlobalFilter = null;
+                if (sQuery) {
+                    this._oGlobalFilter = new sap.ui.model.Filter([
+                        new sap.ui.model.Filter("Ztitle", sap.ui.model.FilterOperator.Contains, sQuery),
+                        new sap.ui.model.Filter("Zcategory", sap.ui.model.FilterOperator.Contains, sQuery),
+                        new sap.ui.model.Filter("Zaddress", sap.ui.model.FilterOperator.Contains, sQuery),
+                    ], false);
+                }
+                this._filterFav();
 
             },
 
@@ -1068,11 +1149,24 @@ sap.ui.define([
                 this.getView().byId("tabListaEventi").getBinding().filter(oFilter);
             },
 
+            _filterFav: function () {
+                var oFilter = null;
+                if (this._oGlobalFilter && this._oPriceFilter) {
+                    oFilter = new Filter([this._oGlobalFilter, this._oPriceFilter], true);
+                } else if (this._oGlobalFilter) {
+                    oFilter = this._oGlobalFilter;
+                } else if (this._oPriceFilter) {
+                    oFilter = this._oPriceFilter;
+                }
+
+                this.getView().byId("tabListaPreferiti").getBinding().filter(oFilter);
+            },
+
             exportToExcel: function () {
                 var aCols, oRowBinding, oSettings, oSheet, oTable;
-                if (!this._oTable) {
-                    this._oTable = this.byId('tabListaEventi');
-                }
+                // if (!this._oTable) {
+                this._oTable = this.byId('tabListaEventi');
+                // }
 
                 oTable = this._oTable;
                 oRowBinding = oTable.getBinding();
@@ -1081,12 +1175,12 @@ sap.ui.define([
                     workbook: {
                         columns: aCols,
                         context: {
-                            sheetName: "Events"
+                            sheetName: "Eventi"
                         }
                     },
                     // dataSource: this.managePrice(this.getView().byId("tabListaServices").getModel("listaServizi").getData()),
                     dataSource: oRowBinding,
-                    fileName: "Events" + '.xlsx',
+                    fileName: "Eventi" + '.xlsx',
                     worker: false // We need to disable worker because we are using a MockServer as OData Service
                 };
                 oSheet = new Spreadsheet(oSettings);
@@ -1094,6 +1188,34 @@ sap.ui.define([
                     oSheet.destroy();
                 });
             },
+
+            exportToExcelFav: function () {
+                var aCols, oRowBinding, oSettings, oSheet, oTable;
+                // if (!this._oTableFav) {
+                this._oTableFav = this.byId('tabListaPreferiti');
+                // }
+
+                oTable = this._oTableFav;
+                oRowBinding = oTable.getBinding();
+                aCols = this.createColumnConfigFav();
+                oSettings = {
+                    workbook: {
+                        columns: aCols,
+                        context: {
+                            sheetName: "Preferiti"
+                        }
+                    },
+                    // dataSource: this.managePrice(this.getView().byId("tabListaServices").getModel("listaServizi").getData()),
+                    dataSource: oRowBinding,
+                    fileName: "Preferiti" + '.xlsx',
+                    worker: false // We need to disable worker because we are using a MockServer as OData Service
+                };
+                oSheet = new Spreadsheet(oSettings);
+                oSheet.build().finally(function () {
+                    oSheet.destroy();
+                });
+            },
+
             createColumnConfig: function () {
                 var aCols = [];
                 let EdmType = exportLibrary.EdmType;
@@ -1164,101 +1286,81 @@ sap.ui.define([
                     format: 'hh:MM:ss',
                     width: 25
                 });
-                // aCols.push({
-                //     label: "Posizione",
-                //     property: "Ebelp",
-                //     type: EdmType.String,
-                //     width: "10"
-                // });
-                // aCols.push({
-                //     label: "Società",
-                //     property: "Butxt",
-                //     type: EdmType.String,
-                //     width: "15"
-                // });
-                // aCols.push({
-                //     label: "Codice SAP Fornitore",
-                //     property: "Lifnr",
-                //     type: EdmType.String,
-                //     width: "15"
-                // });
-                // aCols.push({
-                //     label: "Fornitore Descrizione",
-                //     property: "Name1",
-                //     type: EdmType.String,
-                //     width: "45"
-                // });
-                // aCols.push({
-                //     label: "Gruppo Merci",
-                //     property: "Matkl",
-                //     type: EdmType.String,
-                //     width: "18"
-                // });
-                // /*
-                // aCols.push({
-                //     label: "Gruppo Merci",
-                //     property: "Maktx",
-                //     type: EdmType.String,
-                //     width: "25"
-                // });
-                // */
-                // aCols.push({
-                //     label: "Unità di prezzo",
-                //     property: "Priceunit",
-                //     type: EdmType.Number,
-                //     width: "15"
-                // });
-                // aCols.push({
-                //     label: "Lead Time",
-                //     property: "LeadTime",
-                //     type: EdmType.Number,
-                //     width: "15"
-                // });
-                // aCols.push({
-                //     label: "Confezionamento(pezzi)",
-                //     property: "Confez",
-                //     type: EdmType.Number,
-                //     width: "15"
-                // });
-                // aCols.push({
-                //     label: "Lotto Minimo (pezzi)",
-                //     property: "Minord",
-                //     type: EdmType.Number,
-                //     width: "25"
-                // });
-                // aCols.push({
-                //     label: "Stato",
-                //     property: "Stato",
-                //     type: EdmType.Enumeration,
-                //     width: "25",
-                //     valueMap: {
-                //         "": "DA CARICARE",
-                //         "1": "DA CARICARE",
-                //         "2": "DA INVIARE",
-                //         "3": "IN APPROVAZIONE",
-                //         "4": "APPROVATO"
-                //     }
-                // });
-                /*
+
+                return aCols;
+            },
+
+            createColumnConfigFav: function () {
+                var aCols = [];
+                let EdmType = exportLibrary.EdmType;
                 aCols.push({
-                    label: "Minimo Ordine (€)",
-                    property: "MinOrdEuro",
-                    type: EdmType.Number,
-                    width: "15"
+                    label: "Stato",
+                    type: EdmType.Enumeration, //il valueMap funziona solo con type Enumeration
+                    property: "Zstatus",
+                    // type: EdmType.String,
+                    width: "18",
+                    valueMap: {
+                        "01": 'Da Approvare',
+                        '02': 'Approvato',
+                        '03': 'Modificato',
+                        '04': 'Annullato',
+                        '05': 'Scaduto',
+                    },
                 });
-                */
-                // aCols.push({
-                //     label: "Prezzo",
-                //     property: "Prezzo",
-                //     type: EdmType.Number,
-                //     width: "15"
-                // });
-                // aCols.push({
-                //     label: "Destinazione",
-                //     property: "Destinazione",
-                //     type: EdmType.String,
-                //     width: "25"
-                // });
+                aCols.push({
+                    label: "Evento",
+                    property: "Ztitle",
+                    // type: EdmType.String,
+                    width: "18"
+                });
+                aCols.push({
+                    label: "Tipo Evento",
+                    type: EdmType.Enumeration,
+                    property: "Ztype",
+                    // type: EdmType.String,
+                    width: "15",
+                    valueMap: {
+                        '01': 'Interno IBM',
+                        '02': 'Esterno'
+                    },
+                });
+                aCols.push({
+                    label: "Categoria",
+                    type: EdmType.Enumeration,
+                    property: "Zcategory",
+                    // type: EdmType.String,
+                    width: "18",
+                    valueMap: {
+                        '01': 'Concerto',
+                        '02': 'Teatro',
+                        '03': 'Attivitá Benefica',
+                        '04': 'Serata',
+                        '05': 'Party IBM',
+                        '06': 'Party',
+                        '07': 'Cena',
+                        '08': 'Mostra/Museo',
+                    },
+                });
+                aCols.push({
+                    label: "Location",
+                    property: "Zaddress",
+                    width: "15",
+                });
+                aCols.push({
+                    label: 'Data',
+                    type: EdmType.Date,
+                    property: 'Zdate',
+                    format: 'dd/mm/yyyy',
+                    width: 25
+                });
+                aCols.push({
+                    label: 'Ora',
+                    type: EdmType.Time,
+                    property: 'Ztime',
+                    format: 'hh:MM:ss',
+                    width: 25
+                });
+
                 return aCols;
             },
         });

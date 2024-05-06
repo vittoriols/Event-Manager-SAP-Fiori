@@ -60,7 +60,7 @@
 			<Label
 				class="blackText"
 				id="idDatiDiConsegnaRichiesteDaLabel"
-				text="Quando"
+				text="Data"
 			/>
 			<DatePicker
 				id="idDataDaGODatePicker"

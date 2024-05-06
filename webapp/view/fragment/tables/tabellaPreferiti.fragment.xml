@@ -9,9 +9,9 @@
 <OverflowToolbar class="sapUiSmallMarginBeginEnd sapUiSmallMarginTop" >
 				<Label text="Nessun Preferito" id="labelNumPreferiti" class="fontLabelTabella" />
 				<ToolbarSpacer id="idToolbarSpacer2" />			
-				<SearchField class="sapUiSmallMarginEnd" id="searchFav" placeholder="Ricerca per ..." liveChange="liveSearch" width="30%" />
-				<Button text="Export XLS" type="Emphasized" tooltip="Esporta Iniziative su Excel" icon="sap-icon://excel-attachment" class="sapUiSmallMarginEnd" press="exportToExcelFav" />
-				<Button tooltip="Ordinamento Colonne" icon="sap-icon://sort" press="sortDialogOpenFav"/>
+				<SearchField class="sapUiSmallMarginEnd" id="searchFav" placeholder="Ricerca per Evento o Location ..." liveChange="liveSearchFav" width="30%" />
+				<Button text="Export XLS" type="Emphasized" tooltip="Esporta su Excel" icon="sap-icon://excel-attachment" class="sapUiSmallMarginEnd" press="exportToExcelFav" />
+				<!-- <Button tooltip="Ordinamento Colonne" icon="sap-icon://sort" press="sortDialogOpenFav"/> -->
 
 			</OverflowToolbar>
 			<t:Table class="sapUiSmallMarginBeginEnd pointer" id="tabListaPreferiti"
