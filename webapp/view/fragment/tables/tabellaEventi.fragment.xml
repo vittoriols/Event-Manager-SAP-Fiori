@@ -26,7 +26,7 @@
 
 			</OverflowToolbar>
 			<ScrollContainer>
-			<t:Table class="sapUiSmallMarginBeginEnd pointer" id="tabListaEventi" 
+			<t:Table class="sapUiSmallMarginBeginEnd sapUiSizeCompact pointer" id="tabListaEventi" 
 			    visible="{visibilityModel>/gestOrdGroupVisible}"
 				rows="{path: 'listaEventi>/'}"
 				selectionMode="None"

@@ -14,7 +14,7 @@
 				<!-- <Button tooltip="Ordinamento Colonne" icon="sap-icon://sort" press="sortDialogOpenFav"/> -->
 
 			</OverflowToolbar>
-			<t:Table class="sapUiSmallMarginBeginEnd pointer" id="tabListaPreferiti"
+			<t:Table class="sapUiSmallMarginBeginEnd sapUiSizeCompact pointer" id="tabListaPreferiti"
 				rows="{path: 'listaPreferitiModel>/'}"
 				selectionMode="None"
 				visibleRowCount="10"
