@@ -1,15 +1,3 @@
-// sap.ui.define([], function () {
-//     "use strict";
-//     return {
-//         formatTest: function (oVal) {
-//             if (oVal === "01") {
-//                 return "Ciao"
-//             } else {
-//                 return oVal
-//             }
-//         }
-//     }
-// });
 
 sap.ui.define([], function () {
     "use strict";

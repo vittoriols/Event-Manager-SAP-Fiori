@@ -15,7 +15,6 @@ sap.ui.define([
     "sap/ui/table/RowAction",
     "sap/ui/table/RowActionItem",
     "sap/ui/table/RowSettings",
-    "sap/ui/core/Messaging",
     "sap/ui/model/ValidateException",
     "sap/m/MessageBox",
     "sap/m/MessageToast",
@@ -40,7 +39,6 @@ sap.ui.define([
         RowAction,
         RowActionItem,
         RowSettings,
-        Messaging,
         ValidateException,
         MessageBox,
         MessageToast,
@@ -51,27 +49,21 @@ sap.ui.define([
         let pathMoreAction;
         let userType = 'USER'
         // attach handlers for validation errors
-        var oMM = Messaging;
         return Controller.extend("zui5eventm.zui5eventm.controller.Mainview", {
             Controller: this,
             formatter: formatter,
-
-            Messaging: Messaging,
             onInit: function () {
+                var oRootPath = jQuery.sap.getModulePath("zui5eventm.zui5eventm");
+                var oImageModel = new sap.ui.model.json.JSONModel({
+                    path: oRootPath,
+                });
+                this.getView().setModel(oImageModel, "imageModel");
+
                 var visibilityModel = {
-                    showFooter: false,
-                    gestOrdGroupVisible: true,
-                    pemGroupVisible: false,
-                    pemDetailGroupVisible: false,
-                    pemInAppGroupVisible: false,
-                    kpiGroupVisible: false,
-                    addPianBtnVisible: false,
-                    buttonsPlan: false,
-                    buttonsGO: false,
-                    dynPageTitleVisible: true,
-                    dynPageHeaderVisible: true,
-                    fullEditBtnVisible: false,
-                    detailRitardoConsegne: false
+                    // showFooter: false,
+                    groupVisibleEventi: true,
+                    groupVisiblePreferiti: false,
+
                 };
 
                 var managerCheck = { authorization: false };
@@ -168,23 +160,6 @@ sap.ui.define([
                 let listaStati = new JSONModel();
                 listaStati.setData(stati);
                 this.getView().byId("idStatoEventoGOComboBox").setModel(listaStati, "listaStati");
-
-                //Istanzia tabella preferiti
-
-                // var oTabellaPreferiti = this.byId("tabPreferiti");
-                // // var oToggleButton = oEvent.getSource();
-                // var oTemplate = new RowAction({
-                //     items: [
-                //         new RowActionItem({
-                //             type: "Navigation",
-
-                //             visible: true
-                //         }),
-                //         new RowActionItem({ type: "Delete"})
-                //     ]
-                // });
-
-                // oTabellaPreferiti.setRowSettingsTemplate(oTemplate);
 
                 var oData = [
                     {
@@ -386,17 +361,6 @@ sap.ui.define([
 
 
                 var oView = this.getView();
-
-
-
-                oView.setModel(new JSONModel({ titolo: "", location: "" }));
-                // create dialog lazily
-                this.oDialog ??= await this.loadFragment({
-                    name: "zui5eventm.zui5eventm.view.fragment.others.nuovoEvento",
-                    controller: this
-                });
-
-
                 //TO-DO --> fare in modo di passare il model che sta nell'OnInit senza duplicarlo, inserirlo nel manifest ????
                 let categorieEvento = [{
                     Cod: "01",
@@ -432,31 +396,48 @@ sap.ui.define([
 
                 let listaCategorieEventi = new JSONModel();
                 listaCategorieEventi.setData(categorieEvento);
+
+
+                oView.setModel(new JSONModel({ titolo: "", location: "" }));
+                // create dialog lazily
+                // this.oDialog ??= await this.loadFragment({
+                this.oDialog ??= await Fragment.load({
+                    name: "zui5eventm.zui5eventm.view.fragment.others.nuovoEvento",
+                    controller: this,
+                }).then(function(oContent){
+                    this.oDialog = oContent;
+                    // this.getView().byId("idNewCategoria").setModel(listaCategorieEventi, "listaCategorieEventi");
+                    sap.ui.getCore().byId("idNewCategoria").setModel(listaCategorieEventi, "listaCategorieEventi");
+                    oView.addDependent(this.oDialog);
+                    oContent.open();
+                }.bind(this));
+
+                //  oView.addDependent(this.oDialog);
+
+                // this.oDialog.open();
                 // this.getView().byId("idNewCategoria").setModel(listaCategorieEventi, "listaCategorieEventi");
-
-                oView.addDependent(this.oDialog);
-
-                this.oDialog.open();
-                this.getView().byId("idNewCategoria").setModel(listaCategorieEventi, "listaCategorieEventi");
 
             },
 
             onDialogEditOrderRowClose: function (oEvent) {
-                this.getView().byId("idNewTitolo").setValueState("None");
-                this.getView().byId("idNewTitolo").setValue("");
-                this.getView().byId("idNewCitta").setValueState("None");
-                this.getView().byId("idNewCitta").setValue("");
-                this.getView().byId("idNewData").setValueState("None");
-                this.getView().byId("idNewData").setValue("");
-                this.getView().byId("idNewOra").setValueState("None");
-                this.getView().byId("idNewOra").setValue("");
-                this.getView().byId("idNewTipo").setValueState("None");
-                this.getView().byId("idNewTipo").setValue("");
-                this.getView().byId("idNewCategoria").setValueState("None");
-                this.getView().byId("idNewCategoria").setValue("");
-                this.getView().byId("idNewNote").setValue("");
-                this.getView().byId("idNewSitoWeb").setValue("");
-                this.oDialog.close();
+                var that = sap.ui.getCore();
+                that.byId("idNewTitolo").setValueState("None");
+                that.byId("idNewTitolo").setValue("");
+                that.byId("idNewCitta").setValueState("None");
+                that.byId("idNewCitta").setValue("");
+                that.byId("idNewData").setValueState("None");
+                that.byId("idNewData").setValue("");
+                that.byId("idNewOra").setValueState("None");
+                that.byId("idNewOra").setValue("");
+                that.byId("idNewTipo").setValueState("None");
+                that.byId("idNewTipo").setValue("");
+                that.byId("idNewCategoria").setValueState("None");
+                that.byId("idNewCategoria").setValue("");
+                that.byId("idNewNote").setValue("");
+                that.byId("idNewSitoWeb").setValue("");
+                var oDialog = that.byId("NewEventDialog");
+                oDialog.close();
+                oDialog.destroy();
                 // this.oDialog.destroy();
             },
 
@@ -506,8 +487,9 @@ sap.ui.define([
                 return annoNuovaData + meseNuovaData + giornoNuovaData;
             },
             onDialogNewEventConferma: async function (oEvent) {
-
-                var oView = this.getView(),
+                // var oViewOldUIVersion = oEvent.getSource().getParent().getParent();
+                // var oView = this.getView();
+                var oView = sap.ui.getCore(),
                     aInputs = [
                         oView.byId("idNewTitolo"),
                         oView.byId("idNewCitta"),
@@ -525,19 +507,17 @@ sap.ui.define([
                 }, this);
 
                 if (!bValidationError) {
-
-                    let newTitle = this.getView().byId("idNewTitolo").getValue();
-                    let newCitta = this.getView().byId("idNewCitta").getValue();
-                    let newData = this.getView().byId("idNewData").getValue();
-                    let newOra = this.getView().byId("idNewOra").getValue();
+                    var that = sap.ui.getCore();
+                    let newTitle = that.byId("idNewTitolo").getValue();
+                    let newCitta = that.byId("idNewCitta").getValue();
+                    let newData = that.byId("idNewData").getValue();
+                    let newOra = that.byId("idNewOra").getValue();
                     let newOraString = newOra.toString();
                     newOraString = this.convertTimeToDuration(newOraString);
-                    let newTipo = this.getView().byId("idNewTipo").getSelectedKey();
-                    let newSitoWeb = this.getView().byId("idNewSitoWeb").getValue();
-                    let newNote = this.getView().byId("idNewNote").getValue();
-                    let newCategoria = this.getView().byId("idNewCategoria").getSelectedKey();
-
-                    // Al backend serve
+                    let newTipo = that.byId("idNewTipo").getSelectedKey();
+                    let newSitoWeb = that.byId("idNewSitoWeb").getValue();
+                    let newNote = that.byId("idNewNote").getValue();
+                    let newCategoria = that.byId("idNewCategoria").getSelectedKey();
 
                     var userRequestBody = {
                         ITitle: newTitle,
@@ -550,38 +530,26 @@ sap.ui.define([
                         ISitoweb: newSitoWeb,
                         // communications: []  // contain multiple communications 
                     };
-                    // var oInput = oEvent.getSource(); // prendo il componente
-                    // let val = oEvent.getParameters("value").suggestValue; // leggo il valore "value" quindi
 
-                    let oModelEcc = this.getOwnerComponent().getModel(); // prendo il modello 
+                    let oModelEcc = this.getOwnerComponent().getModel(); 
 
-                    oModelEcc.setUseBatch(false); // cosi dico che non voglio fare una chiamata batch, ossia che raggruppa piu chiamate al suo interno
-                    // let grpMerci = this.getView().byId("serviceInput").getValue().split(" - ")[0];
-                    // let inputService = this.getView().byId("serviceInput");
+                    oModelEcc.setUseBatch(false); 
                     let run = oEvent.getSource();  // ALTERNATIVA AL RIGO DI SOPRA MA PIU EFFICIENTE
-                    // run.setBusy(true); // mette il busy sul pulsante
                     sap.ui.core.BusyIndicator.show(0);
-                    // inputService.destroySuggestionItems();
-                    // inputService.updateSuggestionItems();
-                    // let ISrvNum = this.addFilter("Isrvnum", oEvent.getParameters("value").suggestValue);
-                    oModelEcc.create("/CreateEventSet", userRequestBody, { // qui devo mettere il nome dell'entitá ossia quella che sta dopo il servizio nell'url
+
+                    oModelEcc.create("/CreateEventSet", userRequestBody, { 
                         // filters: [ISrvNum],
                         success: function (oResult) {
-                            // sap.ui.core.BusyIndicator.hide();
-                            // let listaService = new JSONModel();
                             let results = oResult.results;
                             console.log("create completata!");
                             sap.ui.core.BusyIndicator.hide();
-                            oEvent.getSource().getParent().close(); //Chiudi DIALOG FRAGMENT!!
+                            // oEvent.getSource().getParent().close(); //Chiudi DIALOG FRAGMENT!!
+                            sap.ui.getCore().byId("NewEventDialog").close();
                             MessageToast.show("Evento Creato, ora é in attesa di approvazione.");
-                            // for (var i = 0; i < results.length; i++) {
-
-                            //     inputService.addSuggestionItem(new sap.ui.core.Item({ key: results[i].SrvNumber, text: results[i].SrvNumber }));
-
-                            // }
                         },
                         error: function (oError) {
                             sap.ui.core.BusyIndicator.hide();
+                            MessageBox.alert("Inserire i campi obbligatori, poi riprovare.");
                         }
                     });
                     // MessageToast.show("Evento Creato, ora é in attesa di approvazione.");
@@ -593,7 +561,7 @@ sap.ui.define([
 
             onPressImage: function () {
                 // 			this.getView().getModel("img").setProperty('/products/pic1', "https://www.google.it");
-                window.open("https://www.google.it", "_blank");
+                window.open("https://ibm.box.com/s/tki03pjm5180m9jwhjo339mwc9s2pysc", "_blank");
             },
 
 
@@ -659,19 +627,7 @@ sap.ui.define([
                         filters.push(ICategory);
                     }
                 }
-                // sData = lt_address.map(function (oToken) {
-                //     return oToken.getKey();
-                // }).join(",");
-                // if (sData.length > 0) {
-                //     let IAddress = this.addFilter("IAddress", sData);
-                //     filters.push(IAddress);
-                // }
 
-                // let iClose = this.getView().byId("checkboxDaApprovare").getSelected()
-                // if (iClose === true) {
-                //     let IClose = this.addFilter("SClose", 'X');
-                //     filters.push(IClose);
-                // }
                 if (filters.length === 0) {
                     sap.m.MessageBox.warning("Non è stato selezionato alcun filtro.\nE' necessario impostare almeno 1 filtro per iniziare la ricerca.", {
                         actions: ["OK"],
@@ -720,6 +676,7 @@ sap.ui.define([
                 if (!this.sortTable) {
                     this.sortTable = sap.ui.xmlfragment("zui5eventm.zui5eventm.view.fragment.others.SortingTable", this);
                     this.getView().addDependent(this.sortTable);
+                    // sap.ui.getCore().addDependent(this.sortTable);
                 }
                 this.manageSortItems();
                 this.sortTable.open();
@@ -732,24 +689,7 @@ sap.ui.define([
                 this.sortTable.addSortItem(item);
                 item = this.createSortingItem("Data", "Zdate", false);
                 this.sortTable.addSortItem(item);
-                // item = this.createSortingItem("Società", "columnButxt", false);
-                // this.sortTable.addSortItem(item);
-                // item = this.createSortingItem("Fornitore", "columnName1", false);
-                // this.sortTable.addSortItem(item);
-                // item = this.createSortingItem("Descrizione", "columnMaktx", false);
-                // this.sortTable.addSortItem(item);
-                // item = this.createSortingItem("Unità Prezzo", "columnPriceunit", false);
-                // this.sortTable.addSortItem(item);
-                // item = this.createSortingItem("Lead Time", "columnLeadTime", false);
-                // this.sortTable.addSortItem(item);
-                // item = this.createSortingItem("Lotto Minimo (pezzi)", "columnMinord", false);
-                // this.sortTable.addSortItem(item);
-                // item = this.createSortingItem("Stato", "columnStato", false);
-                // this.sortTable.addSortItem(item);
-                // /*item = this.createSortingItem("Minimo Ordine (€)", "columnMinOrdEuro", false);
-                // this.sortTable.addSortItem(item);*/
-                // item = this.createSortingItem("Prezzo", "columnPrezzo", false);
-                // this.sortTable.addSortItem(item);
+
             },
 
             createSortingItem: function (text, key, isSelected) {
@@ -769,36 +709,7 @@ sap.ui.define([
                     sortingV = SortOrder.Descending;
                 }
                 let key = mParams.sortItem.getProperty("key");
-                if (key === "columnPriceunit" || key === "columnLeadTime" || key === "columnPrezzo" || key === "columnMinord" || key === "columnMinOrdEuro") {
-                    let model = oTable.getModel("listaCodiciMaterialiModel");
-                    let dd = model.getData();
 
-                    key = key.replace("column", ""); // Fai diventare la chiava del json
-                    if (sortingV === SortOrder.Ascending) {
-                        dd.sort(function (x, y) {
-                            if (Number(x[key]) < Number(y[key])) {
-                                return -1;
-                            }
-                            if (Number(x[key]) > Number(y[key])) {
-                                return 1;
-                            }
-                            return 0;
-                        });
-                    } else {
-                        dd.sort(function (x, y) {
-                            if (Number(x[key]) > Number(y[key])) {
-                                return -1;
-                            }
-                            if (Number(x[key]) < Number(y[key])) {
-                                return 1;
-                            }
-                            return 0;
-                        });
-                    }
-
-                    model.setData(dd);
-                    oTable.setModel(model, "listaCodiciMaterialiModel");
-                } else {
                     let model = oTable.getModel("listaEventi");
                     let dd = model.getData();
 
@@ -826,7 +737,7 @@ sap.ui.define([
                     }
                     model.setData(dd);
                     oTable.setModel(model, "listaEventi");
-                }
+                // }
             },
 
             _msToHMS: function (ms) {
@@ -866,30 +777,13 @@ sap.ui.define([
                 switch (selectedTab) {
                     case "preferiti":
                         // this.getView().byId("idDynamicPageTitle").setHeading(this.genericTitle);
-                        visibilityModel.setProperty("/gestOrdGroupVisible", false);
-                        visibilityModel.setProperty("/pemGroupVisible", true);
-                        // visibilityModel.setProperty("/pemDetailGroupVisible", false);
-                        // visibilityModel.setProperty("/kpiGroupVisible", false);
-                        // visibilityModel.setProperty("/dynPageTitleVisible", true);
-                        // visibilityModel.setProperty("/dynPageHeaderVisible", true);
-                        // visibilityModel.setProperty("/pemInAppGroupVisible", false);
-                        // this.getView().byId("tabellaPem").setModel(new JSONModel(), "listaPemModel");
-                        // this.getView().byId("titlePem").setText("PEM (0)");
-                        // this.getView().byId("tabellaPem").setVisibleRowCount(0);
+                        visibilityModel.setProperty("/groupVisibleEventi", false);
+                        visibilityModel.setProperty("/groupVisiblePreferiti", true);
                         break;
                     case "eventi":
                         // this.getView().byId("idDynamicPageTitle").setHeading(this.genericTitle);
-                        visibilityModel.setProperty("/pemGroupVisible", false);
-                        visibilityModel.setProperty("/gestOrdGroupVisible", true);
-                        // visibilityModel.setProperty("/pemDetailGroupVisible", false);
-                        // visibilityModel.setProperty("/kpiGroupVisible", false);
-                        // visibilityModel.setProperty("/dynPageTitleVisible", true);
-                        // visibilityModel.setProperty("/dynPageHeaderVisible", true);
-                        // visibilityModel.setProperty("/pemInAppGroupVisible", false);
-                        // this.getView().byId("idGestOrdTable").setVisibleRowCount(0);
-                        // this.getView().getModel("GOTableModel").setData([]);
-                        // this.getView().getModel("GOTableModel").refresh();
-                        // visibilityModel.setProperty("/detailRitardoConsegne", false);
+                        visibilityModel.setProperty("/groupVisiblePreferiti", false);
+                        visibilityModel.setProperty("/groupVisibleEventi", true);
                         break;
                 }
             },
@@ -906,8 +800,6 @@ sap.ui.define([
                         return oPopover;
                     });
                 }
-                // let currentData = this.getView().byId("tabListaServices").getModel("listaListiniModel").getData()
-                // this.byId("labelNumIniziative").setText("Servizi trovati " + currentData.length);
 
                 this.legendaPopover.then(function (oPopover) {
                     oPopover.openBy(oButton);
@@ -916,13 +808,12 @@ sap.ui.define([
 
             onAddFavourite: async function (oEvent) {
                 var that = this;
-                let oRiga = oEvent.getSource().getParent().getParent().getRowBindingContext(); // OTTIENI RIGA
-                let oIndice = oRiga.getPath().replace("/", "");
-                let dataEvento = this.getView().byId("tabListaEventi").getModel("listaEventi").getData();
-                // let rowSelected = JSON.parse(JSON.stringify(dataEvento[pathMoreAction]));
-                let oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                // let oRiga = oEvent.getSource().getParent().getParent().getRowBindingContext(); // OTTIENI RIGA
+                let oIndice = oEvent.getSource().getParent().getParent().getIndex()
+                let oRiga = oEvent.getSource().getParent().getParent().getParent().getBinding().getModel().getData()[oIndice]
 
-                let favEventId = oRiga.getProperty("Zeventid");
+                // let favEventId = oRiga.getProperty("Zeventid");
+                let favEventId = oRiga.Zeventid;
                 let favUser = 'Default';
                 let favAction = 'I';
 
@@ -956,12 +847,13 @@ sap.ui.define([
             },
             onDelFavourite: async function (oEvent) {
                 let that = this;
-                let oRiga = oEvent.getSource().getParent().getParent().getRowBindingContext(); // OTTIENI RIGA
-                let oIndice = oRiga.getPath().replace("/", "");
-                let dataEvento = this.getView().byId("tabListaPreferiti").getModel("listaPreferitiModel").getData();
-                let oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                // let oRiga = oEvent.getSource().getParent().getParent().getRowBindingContext(); // OTTIENI RIGA
+                let oIndice = oEvent.getSource().getParent().getParent().getIndex()
+                let oRiga = oEvent.getSource().getParent().getParent().getParent().getBinding().getModel().getData()[oIndice]
 
-                let favEventId = oRiga.getProperty("Zeventid");
+
+                // let favEventId = oRiga.getProperty("Zeventid");
+                let favEventId = oRiga.Zeventid;
                 let favUser = 'Default';
                 let favAction = 'D';
 
@@ -969,14 +861,13 @@ sap.ui.define([
                 oModelEcc.setUseBatch(false);
                 let run = oEvent.getSource();
                 run.setBusy(true); // mette il busy sul pulsante
-                // sap.ui.core.BusyIndicator.show(0);
-                // /ManageFavouriteSet(IAction='D',IEvent='10',IUser='VSIMONETTI')
+
                 let oPath = () => oModelEcc.createKey("/ManageFavouriteSet", {
                     IAction: favAction, // gets encoded as 'leer%20zeich'
                     IEvent: favEventId,
                     IUser: favUser
                 });
-                // let oPath = "/ManageFavouriteSet('IAction'"+"='"+favAction+"','IEvent'='"+favEventId+"','IUser'='"+favUser+"')";
+
                 oModelEcc.remove(oPath(), { // qui devo mettere il nome dell'entitá ossia quella che sta dopo il servizio nell'url
                     success: function (oResult) {
                         // let results = oResult.results;
@@ -995,28 +886,27 @@ sap.ui.define([
             },
 
             onEnterDetailFav: function (oEvent) {
-                // pathMoreAction = oEvent.getSource().getParent().getIndex();
-                // let path = Number(oEvent.getParameters().rowBindingContext.getPath().replace("/", ""));
-                // let columnIndex = Number(oEvent.getParameter("columnIndex"));
-                let oRiga = oEvent.getSource().getParent().getParent().getRowBindingContext(); // OTTIENI RIGA
-                let oIndice = oRiga.getPath().replace("/", "");
+                
+                // let oRiga = oEvent.getSource().getParent().getParent().getRowBindingContext(); // OTTIENI RIGA OLD
+                let oIndice = oEvent.getSource().getParent().getParent().getIndex()
+                let oRiga = oEvent.getSource().getParent().getParent().getParent().getBinding().getModel().getData()[oIndice]
                 let dataEvento = this.getView().byId("tabListaPreferiti").getModel("listaPreferitiModel").getData();
                 // let rowSelected = JSON.parse(JSON.stringify(dataEvento[pathMoreAction]));
                 let oRouter = sap.ui.core.UIComponent.getRouterFor(this);
 
                 let navModel = new JSONModel();
                 navModel.setData({
-                    Ztitle: oRiga.getProperty("Ztitle"),
-                    Zaddress: oRiga.getProperty("Zaddress"),
-                    ZcreateUser: oRiga.getProperty("ZcreateUser"),
-                    Zdate: oRiga.getProperty("Zdate"),
-                    Zeventid: oRiga.getProperty("Zeventid"),
-                    Znote: oRiga.getProperty("Znote"),
-                    Zstatus: oRiga.getProperty("Zstatus"),
-                    Ztime: oRiga.getProperty("Ztime"),
-                    Ztype: oRiga.getProperty("Ztype"),
-                    Zcategory: oRiga.getProperty("Zcategory"),
-                    Zsitoweb: oRiga.getProperty("Zsitoweb"),
+                    Ztitle: oRiga.Ztitle,
+                    Zaddress: oRiga.Zaddress,
+                    ZcreateUser: oRiga.ZcreateUser,
+                    Zdate: oRiga.Zdate,
+                    Zeventid: oRiga.Zeventid,
+                    Znote: oRiga.Znote,
+                    Zstatus: oRiga.Zstatus,
+                    Ztime: oRiga.Ztime,
+                    Ztype: oRiga.Ztype,
+                    Zcategory: oRiga.Zcategory,
+                    Zsitoweb: oRiga.Zsitoweb,
                 })
                 sap.ui.getCore().setModel(navModel, "navModel");
                 // sap.ui.core.BusyIndicator.show(0);
@@ -1026,28 +916,40 @@ sap.ui.define([
             },
 
             onEnterDetail: function (oEvent) {
-                // pathMoreAction = oEvent.getSource().getParent().getIndex();
-                // let path = Number(oEvent.getParameters().rowBindingContext.getPath().replace("/", ""));
-                // let columnIndex = Number(oEvent.getParameter("columnIndex"));
-                let oRiga = oEvent.getSource().getParent().getParent().getRowBindingContext(); // OTTIENI RIGA
-                let oIndice = oRiga.getPath().replace("/", "");
+
+                // let oRiga = oEvent.getSource().getParent().getParent().getRowBindingContext(); // OTTIENI RIGA OLD
+                let oIndice = oEvent.getSource().getParent().getParent().getIndex()
+                let oRiga = oEvent.getSource().getParent().getParent().getParent().getBinding().getModel().getData()[oIndice]
+                
                 let dataEvento = this.getView().byId("tabListaEventi").getModel("listaEventi").getData();
-                // let rowSelected = JSON.parse(JSON.stringify(dataEvento[pathMoreAction]));
                 let oRouter = sap.ui.core.UIComponent.getRouterFor(this);
 
                 let navModel = new JSONModel();
+                // navModel.setData({
+                //     Ztitle: oRiga.getProperty("Ztitle"),
+                //     Zaddress: oRiga.getProperty("Zaddress"),
+                //     ZcreateUser: oRiga.getProperty("ZcreateUser"),
+                //     Zdate: oRiga.getProperty("Zdate"),
+                //     Zeventid: oRiga.getProperty("Zeventid"),
+                //     Znote: oRiga.getProperty("Znote"),
+                //     Zstatus: oRiga.getProperty("Zstatus"),
+                //     Ztime: oRiga.getProperty("Ztime"),
+                //     Ztype: oRiga.getProperty("Ztype"),
+                //     Zcategory: oRiga.getProperty("Zcategory"),
+                //     Zsitoweb: oRiga.getProperty("Zsitoweb"),
+                // })
                 navModel.setData({
-                    Ztitle: oRiga.getProperty("Ztitle"),
-                    Zaddress: oRiga.getProperty("Zaddress"),
-                    ZcreateUser: oRiga.getProperty("ZcreateUser"),
-                    Zdate: oRiga.getProperty("Zdate"),
-                    Zeventid: oRiga.getProperty("Zeventid"),
-                    Znote: oRiga.getProperty("Znote"),
-                    Zstatus: oRiga.getProperty("Zstatus"),
-                    Ztime: oRiga.getProperty("Ztime"),
-                    Ztype: oRiga.getProperty("Ztype"),
-                    Zcategory: oRiga.getProperty("Zcategory"),
-                    Zsitoweb: oRiga.getProperty("Zsitoweb"),
+                    Ztitle: oRiga.Ztitle,
+                    Zaddress: oRiga.Zaddress,
+                    ZcreateUser: oRiga.ZcreateUser,
+                    Zdate: oRiga.Zdate,
+                    Zeventid: oRiga.Zeventid,
+                    Znote: oRiga.Znote,
+                    Zstatus: oRiga.Zstatus,
+                    Ztime: oRiga.Ztime,
+                    Ztype: oRiga.Ztype,
+                    Zcategory: oRiga.Zcategory,
+                    Zsitoweb: oRiga.Zsitoweb,
                 })
                 sap.ui.getCore().setModel(navModel, "navModel");
                 // sap.ui.core.BusyIndicator.show(0);
@@ -1071,9 +973,13 @@ sap.ui.define([
                 let self = this;
                 let action = "";
                 let oPulsante = oEvent.getSource().getParent();
-                // let oPulsante= oEvent.getSource().getParent();
-                let oRiga = oEvent.getSource().getParent().getParent().getParent().getRowBindingContext(); // OTTIENI RIGA
-                let oIndice = oRiga.getPath().replace("/", "");
+
+                // let oRiga = oEvent.getSource().getParent().getParent().getParent().getRowBindingContext(); // OTTIENI RIGA
+                // let oIndice = oRiga.getPath().replace("/", "");
+
+                // let oIndice = oEvent.getSource().getParent().getParent().getIndex()
+                let oIndice = oEvent.getSource().getParent().getParent().getParent().getIndex();
+                let oRiga = oEvent.getSource().getParent().getParent().getParent().getParent().getBinding().getModel().getData()[oIndice];
                 let dataEvento = this.getView().byId("tabListaEventi").getModel("listaEventi").getData();
                 // let rowSelected = JSON.parse(JSON.stringify(dataEvento[pathMoreAction]));
                 let oRouter = sap.ui.core.UIComponent.getRouterFor(this);
@@ -1083,7 +989,8 @@ sap.ui.define([
                     action = 'R';
                 }
                 if (action !== "") {
-                    let eventId = oRiga.getProperty("Zeventid");
+                    // let eventId = oRiga.getProperty("Zeventid");
+                    let eventId = oRiga.Zeventid;
 
                     let filters = [];
                     let IEvent = this.addFilter("IEvent", eventId);
@@ -1177,7 +1084,8 @@ sap.ui.define([
                 // }
 
                 oTable = this._oTable;
-                oRowBinding = oTable.getBinding();
+                // oRowBinding = oTable.getBinding();
+                oRowBinding = oTable.getBinding().getModel().getData();
                 aCols = this.createColumnConfig();
                 oSettings = {
                     workbook: {
@@ -1204,7 +1112,8 @@ sap.ui.define([
                 // }
 
                 oTable = this._oTableFav;
-                oRowBinding = oTable.getBinding();
+                // oRowBinding = oTable.getBinding();
+                oRowBinding = oTable.getBinding().getModel().getData(); 
                 aCols = this.createColumnConfigFav();
                 oSettings = {
                     workbook: {
@@ -1289,9 +1198,9 @@ sap.ui.define([
                 });
                 aCols.push({
                     label: 'Ora',
-                    type: EdmType.Time,
+                    // type: EdmType.Time,
                     property: 'Ztime',
-                    format: 'hh:MM:ss',
+                    // format: 'hh:MM:ss',
                     width: 25
                 });
 
@@ -1363,9 +1272,9 @@ sap.ui.define([
                 });
                 aCols.push({
                     label: 'Ora',
-                    type: EdmType.Time,
+                    // type: EdmType.Time,
                     property: 'Ztime',
-                    format: 'hh:MM:ss',
+                    // format: 'hh:MM:ss',
                     width: 25
                 });
 

@@ -22,7 +22,7 @@
 				
 				<SearchField class="sapUiSmallMarginEnd" id="searchList" placeholder="Ricerca per ..." liveChange="liveSearch" width="30%" />
 				<Button text="Export XLS" type="Emphasized" tooltip="Esporta su Excel" icon="sap-icon://excel-attachment" class="sapUiSmallMarginEnd" press="exportToExcel" />
-				<Button tooltip="Ordinamento Colonne" icon="sap-icon://sort" press="sortDialogOpen"/>
+				<!-- <Button tooltip="Ordinamento Colonne" icon="sap-icon://sort" press="sortDialogOpen"/> -->
 
 			</OverflowToolbar>
 			<ScrollContainer>

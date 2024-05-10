@@ -25,7 +25,7 @@
 			<HBox class="sapUiSmallMarginBeginEnd">
 				<core:Icon src="sap-icon://circle-task-2" class="sapUiSmallMarginEnd" color="#b3b5b6"/>    
 				<!-- //GRIGIO -->
-				<Label text="Anullato" wrapping="true"></Label>
+				<Label text="Annullato" wrapping="true"></Label>
 			</HBox>
 			<HBox class="sapUiSmallMarginBeginEnd">
 				<core:Icon src="sap-icon://circle-task-2" class="sapUiSmallMarginEnd" color="#FF0000"/>    
