@@ -15,12 +15,12 @@ builder:
       configuration:
         ignoreCertError: true
         target:
-          url: https://bp9appsrv.sap-consulting.it:8010
-          client: "200"
+          url: 
+          client: 
         app:
           name: ZUI5_EVENTM
           description: ZUI5_EVENTM
           package: ZUI5_EVENTM
-          transport: BP9K901482
+          transport: 
         exclude:
           - /test/
