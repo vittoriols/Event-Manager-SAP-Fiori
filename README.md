@@ -7,7 +7,6 @@
 |**Generation Platform**<br>Visual Studio Code|
 |**Template Used**<br>simple|
 |**Service Type**<br>SAP System (ABAP On Premise)|
-|**Service URL**<br>http://bp9appsrv.sap-consulting.it:8000/sap/opu/odata/sap/ZUI5_EVENTM_SRV
 |**Module Name**<br>zui5eventm|
 |**Application Title**<br>Event Manager|
 |**Namespace**<br>zui5eventm|
@@ -17,9 +16,9 @@
 |**Enable TypeScript**<br>False|
 |**Add Eslint configuration**<br>False|
 
-## zui5eventm
+## Event Manager
 
-zui5eventm
+Event Manager
 
 ### Starting the generated app
 
