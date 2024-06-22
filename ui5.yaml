@@ -17,8 +17,8 @@ server:
           url: https://ui5.sap.com
         backend:
           - path: /sap
-            url: https://bp9appsrv.sap-consulting.it:8010
-            client: '200'
+            url: 
+            client: 
     - name: fiori-tools-appreload
       afterMiddleware: compression
       configuration:
